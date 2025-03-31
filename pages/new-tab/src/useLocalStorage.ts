@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const useLocalStorage = (key: string, initialValue: any) => {
   // Get initial value from localStorage if available, otherwise use the provided initialValue
   const storedValue = localStorage.getItem(key)
@@ -17,7 +18,7 @@ const useLocalStorage = (key: string, initialValue: any) => {
 
   // Effect to listen for changes in localStorage from other tabs/windows
   useEffect(() => {
-    const handleStorageChange = event => {
+    const handleStorageChange = (event: StorageEvent) => {
       if (event.key === key) {
         const newValue = event.newValue ? JSON.parse(event.newValue) : initialValue
         setValue(newValue)

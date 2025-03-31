@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { PopupContext } from '../Popup'
+import type { LocalStorageLink } from '../../../utils/types'
 
 type GenericEnvironmentMapping<T> = {
   [key: string]: T
@@ -21,10 +22,10 @@ function getGeneratedLinks() {
 
   return []
 }
-function addGeneratedLink({ newLink, eventNames, title }) {
+function addGeneratedLink({ link, eventNames, title }: LocalStorageLink) {
   const links = getGeneratedLinks()
   const newItem = {
-    link: newLink,
+    link,
     eventNames,
     title,
   }
@@ -79,7 +80,7 @@ const GenerateLinkPage = () => {
     navigator.clipboard.writeText(url.toString())
     flashConfirmationMessage()
     addGeneratedLink({
-      newLink: url.toString(),
+      link: url.toString(),
       eventNames,
       title,
     })

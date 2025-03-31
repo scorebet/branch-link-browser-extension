@@ -1,7 +1,11 @@
 import useLocalStorage from './useLocalStorage'
+import type { LocalStorageLink } from '../../utils/types'
 
 const NewTab = () => {
-  const [generatedLinks, setGeneratedLinks] = useLocalStorage('generatedLinks', [])
+  const [generatedLinks, setGeneratedLinks] = useLocalStorage('generatedLinks', []) as [
+    LocalStorageLink[],
+    React.Dispatch<React.SetStateAction<never[]>>,
+  ]
 
   function clearGeneratedLinks() {
     setGeneratedLinks([])

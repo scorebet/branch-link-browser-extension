@@ -20,14 +20,14 @@ type MarketSelection = {
 
 type PopupContextType = {
   title: string
-  setTitle: React.Dispatch<React.SetStateAction<never[]>>
+  setTitle: React.Dispatch<React.SetStateAction<string>>
   location: string
   marketSelections: MarketSelection[]
   eventNames: string[]
   campaign: string[]
-  setCampaign: React.Dispatch<React.SetStateAction<never[]>>
+  setCampaign: React.Dispatch<React.SetStateAction<string[]>>
   tags: string[]
-  setTags: React.Dispatch<React.SetStateAction<never[]>>
+  setTags: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const PopupContext = React.createContext<PopupContextType>({
@@ -51,12 +51,12 @@ type GenericFlow<T> = {
 type Flow = GenericFlow<ReactNode>
 
 const Popup = () => {
-  const [title, setTitle] = React.useState('')
-  const [eventNames, setEventNames] = React.useState([])
-  const [marketSelections, setMarketSelections] = React.useState([])
-  const [campaign, setCampaign] = React.useState([])
-  const [tags, setTags] = React.useState([])
-  const [location, setLocation] = React.useState('')
+  const [title, setTitle] = React.useState<string>('')
+  const [eventNames, setEventNames] = React.useState<string[]>([])
+  const [marketSelections, setMarketSelections] = React.useState<MarketSelection[]>([])
+  const [campaign, setCampaign] = React.useState<string[]>([])
+  const [tags, setTags] = React.useState<string[]>([])
+  const [location, setLocation] = React.useState<string>('')
 
   const FLOW: Flow = {
     LINK_TITLE: <LinkTitlePage />,
@@ -79,6 +79,7 @@ const Popup = () => {
     )
   }, [])
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const receieveMarketSelections = (props: any) => {
     const { eventNames, marketSelections, location } = props
     console.log('props: ', props)
