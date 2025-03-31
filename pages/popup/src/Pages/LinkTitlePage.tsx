@@ -6,20 +6,8 @@ const LinkTitlePage = () => {
   const { eventNames, title, setTitle } = useContext(PopupContext)
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
-        gap: '48px',
-      }}>
-      <form
-        style={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '6px',
-        }}>
+    <div className="flex items-center flex-col gap-12">
+      <form className="flex flex-col w-full gap-2">
         <p style={{ fontWeight: 'bold' }}>Link Title</p>
         <input
           style={{ borderRadius: '8px', height: '24px' }}

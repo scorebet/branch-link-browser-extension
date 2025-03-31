@@ -110,15 +110,7 @@ const Popup = () => {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: '100%',
-        padding: '12px 36px',
-      }}>
+    <div className="flex flex-col justify-between items-center h-full py-6 px-9">
       <div>
         <header className="flex flex-col justify-center">
           <h1 className="font-bold text-xl text-center">Branch Link Generator</h1>
