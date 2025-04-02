@@ -1,64 +1,149 @@
-import '@src/Popup.css';
-import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
-import { exampleThemeStorage } from '@extension/storage';
-import { t } from '@extension/i18n';
-import { ToggleButton } from '@extension/ui';
+import type { ReactNode } from 'react'
+import React from 'react'
+import './Popup.css'
 
-const notificationOptions = {
-  type: 'basic',
-  iconUrl: chrome.runtime.getURL('icon-34.png'),
-  title: 'Injecting content script error',
-  message: 'You cannot inject script here!',
-} as const;
+import GenerateLinkPage from './Pages/GenerateLinkPage'
+import LinkTitlePage from './Pages/LinkTitlePage'
+
+import type { MultiValue, SingleValue } from 'react-select'
+import ErrorPage from './Pages/ErrorPage'
+import MarketingSettingsPage from './Pages/MarketingSettingsPage'
+import FlowNavigationButtons from './components/FlowNavigationButtons'
+import ProgressBar from './components/ProgressBar'
+import type { SportEvent } from '../../utils/types'
+
+type MarketSelection = {
+  id: string
+  numerator: number
+  denominator: number
+}
+
+type DropdownOption = {
+  value: number
+  label: string
+}
+
+type PopupContextType = {
+  title: string
+  setTitle: React.Dispatch<React.SetStateAction<string>>
+  location: string
+  marketSelections: MarketSelection[]
+  // eventNames: string[]
+
+  campaign: SingleValue<DropdownOption>
+  setCampaign: React.Dispatch<React.SetStateAction<SingleValue<DropdownOption>>>
+
+  tags: MultiValue<DropdownOption> | null
+  setTags: React.Dispatch<React.SetStateAction<MultiValue<DropdownOption> | null>>
+
+  eventData: SportEvent[]
+}
+
+const PopupContext = React.createContext<PopupContextType>({} as PopupContextType)
+
+type GenericFlow<T> = {
+  [key: string]: T
+}
+
+type Flow = GenericFlow<ReactNode>
 
 const Popup = () => {
-  const theme = useStorage(exampleThemeStorage);
-  const isLight = theme === 'light';
-  const logo = isLight ? 'popup/logo_vertical.svg' : 'popup/logo_vertical_dark.svg';
-  const goGithubSite = () =>
-    chrome.tabs.create({ url: 'https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite' });
+  const [title, setTitle] = React.useState<string>('')
+  const [marketSelections, setMarketSelections] = React.useState<MarketSelection[]>([])
+  const [campaign, setCampaign] = React.useState<SingleValue<DropdownOption>>({} as SingleValue<DropdownOption>)
+  const [tags, setTags] = React.useState<MultiValue<DropdownOption> | null>(null)
+  const [location, setLocation] = React.useState<string>('')
+  const [eventData, setEventData] = React.useState<SportEvent[]>([])
 
-  const injectContentScript = async () => {
-    const [tab] = await chrome.tabs.query({ currentWindow: true, active: true });
+  const FLOW: Flow = {
+    LINK_TITLE: <LinkTitlePage />,
+    MARKETING: <MarketingSettingsPage />,
+    GENERATE: <GenerateLinkPage />,
+  }
 
-    if (tab.url!.startsWith('about:') || tab.url!.startsWith('chrome:')) {
-      chrome.notifications.create('inject-error', notificationOptions);
-    }
+  const [flowIndex, setFlowIndex] = React.useState(0)
 
-    await chrome.scripting
-      .executeScript({
-        target: { tabId: tab.id! },
-        files: ['/content-runtime/index.iife.js'],
-      })
-      .catch(err => {
-        // Handling errors related to other paths
-        if (err.message.includes('Cannot access a chrome:// URL')) {
-          chrome.notifications.create('inject-error', notificationOptions);
+  const fetchSelections = React.useCallback(() => {
+    chrome.tabs.query(
+      {
+        active: true,
+        currentWindow: true,
+      },
+      tabs => {
+        if (tabs[0] && tabs[0].id) {
+          chrome.tabs.sendMessage(tabs[0].id, { operation: 'GetMarketSelections' }, receieveMarketSelections)
         }
-      });
-  };
+      },
+    )
+  }, [])
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const receieveMarketSelections = (props: any) => {
+    const { location, eventData, marketSelections } = props
+    setMarketSelections(marketSelections ?? [])
+    setLocation(location)
+    setEventData(eventData)
+  }
+
+  React.useEffect(() => {
+    fetchSelections()
+  }, [fetchSelections])
+
+  const CURRENT_FLOW_PAGE = React.useMemo(() => {
+    const CURRENT_FLOW_KEY = Object.keys(FLOW)[flowIndex]
+    return FLOW[CURRENT_FLOW_KEY]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flowIndex, marketSelections, eventData])
+
+  const onFirstPage = flowIndex === 0
+  const onLastPage = flowIndex === Object.keys(FLOW).length - 1
+
+  const totalLegs = eventData.reduce((total: number, event: SportEvent) => total + event.legs.length, 0)
+  const isErrorState = totalLegs !== marketSelections.length
+
+  const openwindow = () => {
+    chrome.tabs.create({
+      url: 'new-tab/index.html',
+    })
+  }
 
   return (
-    <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
-      <header className={`App-header ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
-        <button onClick={goGithubSite}>
-          <img src={chrome.runtime.getURL(logo)} className="App-logo" alt="logo" />
-        </button>
-        <p>
-          Edit <code>pages/popup/src/Popup.tsx</code>
-        </p>
-        <button
-          className={
-            'font-bold mt-4 py-1 px-4 rounded shadow hover:scale-105 ' +
-            (isLight ? 'bg-blue-200 text-black' : 'bg-gray-700 text-white')
-          }
-          onClick={injectContentScript}>
-          Click to inject Content Script
-        </button>
-        <ToggleButton>{t('toggleTheme')}</ToggleButton>
-      </header>
-    </div>
-  );
-};
+    <div className="flex flex-col h-full w-full py-6 px-4">
+      <div>
+        <header className="flex flex-col">
+          <button onClick={openwindow}>
+            <img src={chrome.runtime.getURL('popup/home.svg')} className="" alt="betslip" />
+          </button>
+          <h1 className="font-bold text-lg mb-4">Branch Link Generator</h1>
+          <ProgressBar stepCount={Object.keys(FLOW).length} currentStepIndex={flowIndex} />
+        </header>
 
-export default withErrorBoundary(withSuspense(Popup, <div> Loading ... </div>), <div> Error Occur </div>);
+        <PopupContext.Provider
+          value={{
+            marketSelections,
+            eventData,
+            campaign,
+            setCampaign,
+            tags,
+            setTags,
+            location,
+            title,
+            setTitle,
+          }}>
+          <div className="max-h-screen">{isErrorState ? <ErrorPage /> : CURRENT_FLOW_PAGE}</div>
+        </PopupContext.Provider>
+      </div>
+
+      <FlowNavigationButtons
+        onFirstPage={onFirstPage}
+        onLastPage={onLastPage}
+        back={() => setFlowIndex(flowIndex - 1)}
+        next={() => setFlowIndex(flowIndex + 1)}
+      />
+    </div>
+  )
+}
+
+export default Popup
+
+export { PopupContext }
