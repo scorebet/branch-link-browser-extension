@@ -1,11 +1,7 @@
-type MarketSelection = {
-  id: string
-  numerator: string
-  denominator: string
-}
-
 let marketSelections: MarketSelection[] = []
-let eventNames: string[] = []
+let eventData: SportEvent[] = []
+
+import type { MarketSelection, SportEvent } from '../../utils/types'
 
 console.log('content script injected')
 
@@ -35,29 +31,44 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
   if (message.operation === 'GetMarketSelections') {
     console.log('window.location.href: ', window.location.href)
+    parseBetslip()
     return sendResponse({
-      eventNames,
+      eventData,
       marketSelections,
       location: window.location.href,
     })
   }
-
-  console.log('marketSelections: ', marketSelections)
 })
 
 function parseBetslip() {
-  const betslipSelectionList = document.getElementsByClassName('betslip-selection-list')
-  if (!betslipSelectionList.length) {
-    eventNames = []
-    return
-  }
+  const betslipSelectionList = document.getElementsByClassName('betslip-selection-list').item(0)
+  const events = betslipSelectionList?.querySelectorAll('[data-testid^="event"]')
 
-  const eventNamesOne: string[] = Array.prototype.map.call(
-    betslipSelectionList.item(0)?.getElementsByClassName('text-sm text-betslip-primary'),
-    e => e.innerHTML,
-  )
+  const eventsAndLegs: SportEvent[] = []
 
-  eventNames = [...eventNamesOne]
+  events?.forEach(event => {
+    const marketSelectionLink = event.firstChild?.firstChild as HTMLElement
+    const marketSelectionEventName = marketSelectionLink
+      ?.getElementsByClassName('text-sm text-betslip-primary')
+      .item(0)?.innerHTML
 
-  return true
+    const legElements = (event.firstChild as HTMLElement).getElementsByClassName('text-style-m-medium')
+    const legNames = new Set()
+
+    for (let i = 0; i < legElements.length; i++) {
+      const leg = legElements[i]
+      if (leg.tagName === 'SPAN') {
+        legNames.add(leg.innerHTML)
+      }
+    }
+
+    if (marketSelectionEventName && legNames) {
+      eventsAndLegs.push({
+        eventName: marketSelectionEventName,
+        legs: legNames.values().toArray() as string[],
+      })
+    }
+  })
+
+  eventData = eventsAndLegs
 }

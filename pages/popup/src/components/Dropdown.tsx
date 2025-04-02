@@ -1,47 +1,51 @@
-type DropdownProps = {
-  options: string[]
-  selected: string[]
-  setSelected: React.Dispatch<React.SetStateAction<string[]>>
-  inputType?: 'checkbox' | 'select'
-}
+/** eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+import { useState } from 'react'
 
-const Dropdown = ({ options, selected, setSelected, inputType = 'select' }: DropdownProps) => {
-  const CheckboxOption = ({ name }: { name: string }) => {
-    const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const checked = event.target.checked
-      if (checked) setSelected(Array.from(new Set([...selected, name])))
-      else setSelected(selected.filter(i => i !== name))
-    }
+const Dropdown = ({ options, selectedOptions, onSelect, selected }) => {
+  const [isOpen, setIsOpen] = useState(false)
 
-    return (
-      <li>
-        <label>
-          <input type="checkbox" onChange={e => handleSelect(e)} checked={selected.includes(name)} />
-          {name}
-        </label>
-      </li>
-    )
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setIsOpen(prev => !prev)
   }
 
-  const DefaultOption = ({ name }: { name: string }) => {
-    const handleSelect = () => {
-      if (!selected.length || !selected.includes(name)) setSelected([name])
-      else setSelected([])
-    }
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
-    return <li onClick={handleSelect}>{name}</li>
+  // Handle option selection/deselection
+  const handleOptionToggle = option => {
+    const newSelectedOptions = selectedOptions.includes(option)
+      ? selectedOptions.filter(item => item !== option) // Deselect if already selected
+      : [...selectedOptions, option] // Select if not selected
+    onSelect(newSelectedOptions)
   }
 
   return (
-    <details className="dropdown">
-      <summary>{selected ? selected.join(' | ') : 'Select'}</summary>
-      <ul>
-        {options.map(i => {
-          if (inputType === 'checkbox') return <CheckboxOption name={i} />
-          else return <DefaultOption name={i} />
-        })}
-      </ul>
-    </details>
+    <div className="relative inline-block text-left w-36 max-w-36 h-6 max-h-6">
+      {/* Dropdown Button */}
+      <button
+        type="button"
+        onClick={toggleDropdown}
+        className="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-blue-700">
+        {selectedOptions.length > 0 ? `Selected: ${selectedOptions.join(', ')}` : 'Select Options'}
+      </button>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div className="absolute right-0 left-0 mx-auto mt-2 w-48 bg-white shadow-lg rounded-md border border-gray-200 z-10">
+          <ul className="py-1">
+            {options.map((option, index) => (
+              <li
+                key={index}
+                onClick={() => handleOptionToggle(option)}
+                className={`block px-4 py-2 text-gray-700 hover:bg-blue-100 cursor-pointer ${
+                  selectedOptions.includes(option) ? 'bg-blue-200' : ''
+                }`}>
+                <input type="checkbox" checked={selectedOptions.includes(option)} readOnly className="mr-2" />
+                {option}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   )
 }
 

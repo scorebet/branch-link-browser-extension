@@ -4,4 +4,15 @@ type LocalStorageLink = {
   title: string
 }
 
-export type { LocalStorageLink }
+type SportEvent = {
+  eventName: string
+  legs: string[]
+}
+
+type MarketSelection = {
+  id: string
+  numerator: string
+  denominator: string
+}
+
+export type { LocalStorageLink, SportEvent, MarketSelection }

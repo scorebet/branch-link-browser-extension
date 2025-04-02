@@ -2,15 +2,15 @@ import type { ReactNode } from 'react'
 import React from 'react'
 import './Popup.css'
 
-// import ErrorPage from './Pages/ErrorPage';
 import GenerateLinkPage from './Pages/GenerateLinkPage'
 import LinkTitlePage from './Pages/LinkTitlePage'
 
-// import FlowNavigationButtons from './components/FlowNavigationButtons';
-import MarketingSettingsPage from './Pages/MarketingSettingsPage'
-import ProgressBar from './components/ProgressBar'
+import type { MultiValue, SingleValue } from 'react-select'
 import ErrorPage from './Pages/ErrorPage'
+import MarketingSettingsPage from './Pages/MarketingSettingsPage'
 import FlowNavigationButtons from './components/FlowNavigationButtons'
+import ProgressBar from './components/ProgressBar'
+import type { SportEvent } from '../../utils/types'
 
 type MarketSelection = {
   id: string
@@ -18,31 +18,28 @@ type MarketSelection = {
   denominator: number
 }
 
+type DropdownOption = {
+  value: number
+  label: string
+}
+
 type PopupContextType = {
   title: string
   setTitle: React.Dispatch<React.SetStateAction<string>>
   location: string
   marketSelections: MarketSelection[]
-  eventNames: string[]
-  campaign: string[]
-  setCampaign: React.Dispatch<React.SetStateAction<string[]>>
-  tags: string[]
-  setTags: React.Dispatch<React.SetStateAction<string[]>>
+  // eventNames: string[]
+
+  campaign: SingleValue<DropdownOption>
+  setCampaign: React.Dispatch<React.SetStateAction<SingleValue<DropdownOption>>>
+
+  tags: MultiValue<DropdownOption> | null
+  setTags: React.Dispatch<React.SetStateAction<MultiValue<DropdownOption> | null>>
+
+  eventData: SportEvent[]
 }
 
-const PopupContext = React.createContext<PopupContextType>({
-  title: '',
-  setTitle: () => {},
-  location: '',
-  marketSelections: [],
-  eventNames: [],
-
-  campaign: [],
-  setCampaign: () => {},
-
-  tags: [],
-  setTags: () => {},
-})
+const PopupContext = React.createContext<PopupContextType>({} as PopupContextType)
 
 type GenericFlow<T> = {
   [key: string]: T
@@ -52,11 +49,11 @@ type Flow = GenericFlow<ReactNode>
 
 const Popup = () => {
   const [title, setTitle] = React.useState<string>('')
-  const [eventNames, setEventNames] = React.useState<string[]>([])
   const [marketSelections, setMarketSelections] = React.useState<MarketSelection[]>([])
-  const [campaign, setCampaign] = React.useState<string[]>([])
-  const [tags, setTags] = React.useState<string[]>([])
+  const [campaign, setCampaign] = React.useState<SingleValue<DropdownOption>>({} as SingleValue<DropdownOption>)
+  const [tags, setTags] = React.useState<MultiValue<DropdownOption> | null>(null)
   const [location, setLocation] = React.useState<string>('')
+  const [eventData, setEventData] = React.useState<SportEvent[]>([])
 
   const FLOW: Flow = {
     LINK_TITLE: <LinkTitlePage />,
@@ -73,19 +70,19 @@ const Popup = () => {
         currentWindow: true,
       },
       tabs => {
-        //@ts-ignore
-        chrome.tabs.sendMessage(tabs[0].id, { operation: 'GetMarketSelections' }, receieveMarketSelections)
+        if (tabs[0] && tabs[0].id) {
+          chrome.tabs.sendMessage(tabs[0].id, { operation: 'GetMarketSelections' }, receieveMarketSelections)
+        }
       },
     )
   }, [])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const receieveMarketSelections = (props: any) => {
-    const { eventNames, marketSelections, location } = props
-    console.log('props: ', props)
-    setEventNames(eventNames ?? [])
+    const { location, eventData, marketSelections } = props
     setMarketSelections(marketSelections ?? [])
     setLocation(location)
+    setEventData(eventData)
   }
 
   React.useEffect(() => {
@@ -96,12 +93,13 @@ const Popup = () => {
     const CURRENT_FLOW_KEY = Object.keys(FLOW)[flowIndex]
     return FLOW[CURRENT_FLOW_KEY]
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [flowIndex, marketSelections, eventNames])
+  }, [flowIndex, marketSelections, eventData])
 
   const onFirstPage = flowIndex === 0
   const onLastPage = flowIndex === Object.keys(FLOW).length - 1
 
-  const isErrorState = eventNames.length !== marketSelections.length
+  const totalLegs = eventData.reduce((total: number, event: SportEvent) => total + event.legs.length, 0)
+  const isErrorState = totalLegs !== marketSelections.length
 
   const openwindow = () => {
     chrome.tabs.create({
@@ -110,30 +108,38 @@ const Popup = () => {
   }
 
   return (
-    <div className="flex flex-col justify-between items-center h-full py-6 px-9">
+    <div className="flex flex-col h-full w-full py-6 px-4">
       <div>
-        <header className="flex flex-col justify-center">
-          <h1 className="font-bold text-xl text-center">Branch Link Generator</h1>
-          <button onClick={openwindow} className="mt-2">
-            View All Links
+        <header className="flex flex-col">
+          <button onClick={openwindow}>
+            <img src={chrome.runtime.getURL('popup/home.svg')} className="" alt="betslip" />
           </button>
+          <h1 className="font-bold text-lg mb-4">Branch Link Generator</h1>
           <ProgressBar stepCount={Object.keys(FLOW).length} currentStepIndex={flowIndex} />
         </header>
 
         <PopupContext.Provider
-          value={{ marketSelections, eventNames, campaign, setCampaign, tags, setTags, location, title, setTitle }}>
+          value={{
+            marketSelections,
+            eventData,
+            campaign,
+            setCampaign,
+            tags,
+            setTags,
+            location,
+            title,
+            setTitle,
+          }}>
           <div className="max-h-screen">{isErrorState ? <ErrorPage /> : CURRENT_FLOW_PAGE}</div>
         </PopupContext.Provider>
       </div>
 
-      <footer>
-        <FlowNavigationButtons
-          onFirstPage={onFirstPage}
-          onLastPage={onLastPage}
-          back={() => setFlowIndex(flowIndex - 1)}
-          next={() => setFlowIndex(flowIndex + 1)}
-        />
-      </footer>
+      <FlowNavigationButtons
+        onFirstPage={onFirstPage}
+        onLastPage={onLastPage}
+        back={() => setFlowIndex(flowIndex - 1)}
+        next={() => setFlowIndex(flowIndex + 1)}
+      />
     </div>
   )
 }

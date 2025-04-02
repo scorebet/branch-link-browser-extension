@@ -3,26 +3,12 @@ import React from 'react'
 const ProgressBar = ({ stepCount, currentStepIndex }) => {
   const arr = new Array(stepCount).fill(0)
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '12px',
-        margin: '24px',
-      }}>
+    <div className="flex flex-row gap-3 ">
       {arr.map((_i, idx) => {
         if (idx === currentStepIndex) {
-          return (
-            <div
-              key={idx}
-              style={{
-                backgroundColor: '#0172ad',
-                height: '2px',
-                width: '100%',
-              }}></div>
-          )
+          return <div key={idx} className="bg-blue-600 h-1 w-full"></div>
         }
-        return <div key={idx} style={{ backgroundColor: 'white', height: '2px', width: '100%' }}></div>
+        return <div key={idx} className="bg-gray-400 h-1 w-full"></div>
       })}
     </div>
   )
