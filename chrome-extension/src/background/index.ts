@@ -30,8 +30,8 @@ chrome.webRequest.onBeforeRequest.addListener(
             operation: 'BetslipAddMarketSelection',
             data: {
               id: cleanMarketSelectionId(parsedBody.variables.input.selectionId),
-              numerator: parsedBody.variables.input.odds.numerator,
-              denominator: parsedBody.variables.input.odds.denominator,
+              numerator: parsedBody.variables.input.odds.numeratorLong,
+              denominator: parsedBody.variables.input.odds.denominatorLong,
             },
           })
         }

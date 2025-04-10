@@ -12,6 +12,7 @@ const ENVIRONMENT_MAPPINGS: EnvironmentMapping = {
   'https://espnbet.com': 'https://espnbet.app.link',
   'https://staging.endzonebet.com': 'https://espnbet.test-app.link/Kf3yzFBkVRb',
   'https://uat.endzonebet.com': 'https://espnbet.test-app.link/aayushUAT',
+  'http://localhost:3000': 'https://espnbet.test-app.link/testLocal',
 }
 
 function getGeneratedLinks() {
@@ -58,6 +59,8 @@ const GenerateLinkPage = () => {
 
     const urlString = ENVIRONMENT_MAPPINGS[baseUrl]
     const url = new URL(urlString)
+
+    console.log('marketSelections: ', marketSelections)
 
     marketSelections?.forEach((item, index) => {
       url.searchParams.append(`market_selection_id[${index}]`, item.id)
