@@ -79,6 +79,7 @@ const Popup = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const receieveMarketSelections = (props: any) => {
+    console.log('props: ', props)
     const { location, eventData, marketSelections } = props
     setMarketSelections(marketSelections ?? [])
     setLocation(location)
