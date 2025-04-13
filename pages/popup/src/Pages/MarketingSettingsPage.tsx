@@ -19,10 +19,20 @@ const MarketingSettingsPage = () => {
 
   const animatedComponents = makeAnimated()
 
-  const { campaign, setCampaign, tags, setTags } = useContext(PopupContext)
+  const { campaign, setCampaign, tags, setTags, channel, setChannel } = useContext(PopupContext)
 
   return (
     <div className="w-full mt-6 flex flex-col gap-y-7">
+      <div>
+        <p className="font-bold text-xs">Channel</p>
+        <input
+          value={channel ?? ''}
+          onChange={e => setChannel(e.target.value)}
+          type="text"
+          placeholder="Enter text..."
+          className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+        />
+      </div>
       <div>
         <p className="font-bold text-xs">Customer Campaign</p>
         <Select

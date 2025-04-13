@@ -45,7 +45,7 @@ function extractBaseAndPath(url: string) {
 }
 
 const GenerateLinkPage = () => {
-  const { marketSelections, campaign, tags, location, title, eventData } = useContext(PopupContext)
+  const { marketSelections, campaign, tags, channel, location, title, eventData } = useContext(PopupContext)
 
   const [showFlash, setShowFlash] = React.useState(false)
 
@@ -74,6 +74,10 @@ const GenerateLinkPage = () => {
 
     if (campaign && campaign?.label) {
       url.searchParams.append('campaign', campaign.label)
+    }
+
+    if (channel && channel !== '') {
+      url.searchParams.append('~channel', channel)
     }
 
     tags?.forEach((item, index) => {
