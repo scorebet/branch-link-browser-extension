@@ -36,6 +36,9 @@ type PopupContextType = {
   tags: MultiValue<DropdownOption> | null
   setTags: React.Dispatch<React.SetStateAction<MultiValue<DropdownOption> | null>>
 
+  channel: string | null
+  setChannel: React.Dispatch<React.SetStateAction<string | null>>
+
   eventData: SportEvent[]
 }
 
@@ -51,6 +54,7 @@ const Popup = () => {
   const [title, setTitle] = React.useState<string>('')
   const [marketSelections, setMarketSelections] = React.useState<MarketSelection[]>([])
   const [campaign, setCampaign] = React.useState<SingleValue<DropdownOption>>({} as SingleValue<DropdownOption>)
+  const [channel, setChannel] = React.useState<string | null>(null)
   const [tags, setTags] = React.useState<MultiValue<DropdownOption> | null>(null)
   const [location, setLocation] = React.useState<string>('')
   const [eventData, setEventData] = React.useState<SportEvent[]>([])
@@ -130,6 +134,8 @@ const Popup = () => {
             location,
             title,
             setTitle,
+            channel,
+            setChannel,
           }}>
           <div className="max-h-screen">{isErrorState ? <ErrorPage /> : CURRENT_FLOW_PAGE}</div>
         </PopupContext.Provider>
