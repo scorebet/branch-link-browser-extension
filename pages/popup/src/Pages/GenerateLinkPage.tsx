@@ -103,7 +103,7 @@ const GenerateLinkPage = () => {
       {showFlash && <p className="font-semibold text-sm w-fit mx-auto mt-6">Link Copied!</p>}
       <button
         onClick={generateLink}
-        className="absolute left-0 right-0 mx-auto top-1/2 max-w-36 bg-blue-500 text-white hover:bg-blue-700 font-bold py-2 px-4 rounded">
+        className="absolute left-0 right-0 mx-auto top-1/2 max-w-36 bg-brand-green text-white font-bold py-2 px-4 rounded">
         Copy Link
       </button>
     </>
