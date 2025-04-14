@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { PopupContext } from '../Popup'
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 
 const MarketingSettingsPage = () => {
@@ -34,7 +35,7 @@ const MarketingSettingsPage = () => {
       </div>
       <div className="font-bold text-xs">
         <p>Tags</p>
-        <Select
+        <CreatableSelect
           closeMenuOnSelect={false}
           components={animatedComponents}
           isMulti
