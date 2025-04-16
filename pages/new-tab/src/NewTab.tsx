@@ -45,15 +45,20 @@ const NewTab = () => {
 
   return (
     <div className="flex flex-col items-start w-3/4 m-auto gap-6 mt-20">
-      <h1 className="text-4xl font-bold">Branch Link Generator</h1>
+      <div className="flex justify-between w-full my-6">
+        <div className="flex">
+          <img src={chrome.runtime.getURL('popup/logo.svg')} alt="espn bet logo" className="w-10 mx-2" />
+          <h1 className="text-4xl font-bold">Branch Link Generator</h1>
+        </div>
 
-      {generatedLinks.length > 0 && (
-        <button
-          onClick={clearGeneratedLinks}
-          className="bg-red-500 text-white hover:bg-red-700 font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
-          Clear All Links
-        </button>
-      )}
+        {generatedLinks.length > 0 && (
+          <button
+            onClick={clearGeneratedLinks}
+            className="bg-red-500 text-white hover:bg-red-700 font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+            Clear All Links
+          </button>
+        )}
+      </div>
 
       {!generatedLinks.length ? (
         <div className="mt-10">
@@ -102,13 +107,19 @@ const NewTab = () => {
                     ))}
                   </td>
                   <td className="px-6 py-4">
-                    <button className="text-blue-600 font-bold" onClick={() => openPreview(link.link)}>
+                    <button
+                      className="text-brand-green-link font-semibold flex gap-1"
+                      onClick={() => openPreview(link.link)}>
                       Preview
+                      <img src={chrome.runtime.getURL('new-tab/preview.svg')} alt="preview" />
                     </button>
                   </td>
                   <td className="px-6 py-4">
-                    <button className="text-blue-600 font-bold" onClick={() => copyToClipboard(link.link)}>
-                      Copy Link
+                    <button
+                      className="text-brand-green-link font-semibold flex gap-1"
+                      onClick={() => copyToClipboard(link.link)}>
+                      Copy
+                      <img src={chrome.runtime.getURL('new-tab/copy.svg')} alt="copy" />
                     </button>
                   </td>
                 </tr>
@@ -117,7 +128,9 @@ const NewTab = () => {
           </tbody>
         </table>
       )}
-      {showingCopyLinkToast && <Toast message="Copied Link!" onClose={() => setShowingCopyLinkToast(false)} />}
+      {showingCopyLinkToast && (
+        <Toast message="Copied Link!" type="success" onClose={() => setShowingCopyLinkToast(false)} />
+      )}
     </div>
   )
 }
