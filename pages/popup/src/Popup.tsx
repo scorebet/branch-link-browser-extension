@@ -113,32 +113,37 @@ const Popup = () => {
   }
 
   return (
-    <div className="flex flex-col h-full w-full py-6 px-4">
+    <div className="flex flex-col h-full w-full">
       <div>
-        <header className="flex flex-col">
-          <button onClick={openwindow}>
-            <img src={chrome.runtime.getURL('popup/home.svg')} className="" alt="betslip" />
-          </button>
-          <h1 className="font-bold text-lg mb-4">Branch Link Generator</h1>
-          <ProgressBar stepCount={Object.keys(FLOW).length} currentStepIndex={flowIndex} />
+        <header className="bg-brand-background-black justify-between items-center flex px-2 py-3 mb-3">
+          <div className="flex items-center">
+            <img src={chrome.runtime.getURL('popup/logo.svg')} alt="espn bet logo" className="w-6" />
+            <h1 className="font-bold text-lg text-white">ESPN Bet Link Creator</h1>
+          </div>
+          <div>
+            <button onClick={openwindow}>
+              <img src={chrome.runtime.getURL('popup/home.svg')} className="" alt="betslip" />
+            </button>
+          </div>
         </header>
 
-        <PopupContext.Provider
-          value={{
-            marketSelections,
-            eventData,
-            campaign,
-            setCampaign,
-            tags,
-            setTags,
-            location,
-            title,
-            setTitle,
-            channel,
-            setChannel,
-          }}>
-          <div className="max-h-screen">{isErrorState ? <ErrorPage /> : CURRENT_FLOW_PAGE}</div>
-        </PopupContext.Provider>
+        <div className="max-h-screen px-4 py-2">
+          <ProgressBar stepCount={Object.keys(FLOW).length} currentStepIndex={flowIndex} />
+          <PopupContext.Provider
+            value={{
+              marketSelections,
+              eventData,
+              campaign,
+              setCampaign,
+              tags,
+              setTags,
+              location,
+              title,
+              setTitle,
+            }}>
+            {isErrorState ? <ErrorPage /> : CURRENT_FLOW_PAGE}
+          </PopupContext.Provider>
+        </div>
       </div>
 
       <FlowNavigationButtons

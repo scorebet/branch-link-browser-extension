@@ -8,6 +8,7 @@ export default {
     extend: {
       colors: {
         'brand-green': '#058569',
+        'brand-background-black': '#1D1E1F',
       },
     },
   },
