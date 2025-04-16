@@ -26,6 +26,7 @@ const MarketingSettingsPage = () => {
       <div>
         <p className="font-bold text-xs">Customer Campaign</p>
         <Select
+          placeholder="Select"
           closeMenuOnSelect
           components={animatedComponents}
           options={VALID_CAMPAIGNS}
@@ -36,6 +37,7 @@ const MarketingSettingsPage = () => {
       <div className="font-bold text-xs">
         <p>Tags</p>
         <CreatableSelect
+          placeholder="Type or select from dropdown"
           closeMenuOnSelect={false}
           components={animatedComponents}
           isMulti
