@@ -1,11 +1,15 @@
 import useLocalStorage from './useLocalStorage'
 import type { LocalStorageLink } from '../../utils/types'
+import Toast from './components/Toast'
+import { useState } from 'react'
 
 const NewTab = () => {
   const [generatedLinks, setGeneratedLinks] = useLocalStorage('generatedLinks', []) as [
     LocalStorageLink[],
     React.Dispatch<React.SetStateAction<never[]>>,
   ]
+
+  const [showingCopyLinkToast, setShowingCopyLinkToast] = useState(false)
 
   function clearGeneratedLinks() {
     setGeneratedLinks([])
@@ -28,6 +32,15 @@ const NewTab = () => {
     }
 
     return tags
+  }
+
+  const copyToClipboard = (link: string) => {
+    navigator.clipboard.writeText(link)
+    setShowingCopyLinkToast(true)
+  }
+
+  const openPreview = (link: string) => {
+    window.open(link, '_blank')
   }
 
   return (
@@ -66,12 +79,14 @@ const NewTab = () => {
               <th scope="col" className="px-6 py-3">
                 Branch Link
               </th>
+              <th scope="col" className="px-6 py-3">
+                URL
+              </th>
             </tr>
           </thead>
           <tbody>
             {generatedLinks.map(link => {
               const parsedLink = parseLink(link.link)
-              console.log('parsed link: ', parsedLink)
 
               const campaign = parsedLink.searchParams.getAll('campaign')
               const tags = extractTagsFromUrl(link.link)
@@ -87,9 +102,14 @@ const NewTab = () => {
                     ))}
                   </td>
                   <td className="px-6 py-4">
-                    <a className="text-blue-600 font-bold" href={link.link}>
+                    <button className="text-blue-600 font-bold" onClick={() => openPreview(link.link)}>
                       Preview
-                    </a>
+                    </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button className="text-blue-600 font-bold" onClick={() => copyToClipboard(link.link)}>
+                      Copy Link
+                    </button>
                   </td>
                 </tr>
               )
@@ -97,6 +117,7 @@ const NewTab = () => {
           </tbody>
         </table>
       )}
+      {showingCopyLinkToast && <Toast message="Copied Link!" onClose={() => setShowingCopyLinkToast(false)} />}
     </div>
   )
 }
