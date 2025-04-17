@@ -10,7 +10,7 @@ const LinkTitlePage = () => {
       <form className="flex flex-col w-full mt-5">
         <p className="text-gray-900 text-sm font-medium">Link Title</p>
         <input
-          className="border-blue-500 border-2 rounded-lg p-2"
+          className="border-brand-green border-2 rounded-lg p-2"
           value={title}
           onChange={e => setTitle(e.target.value)}
           placeholder="Enter Title"
