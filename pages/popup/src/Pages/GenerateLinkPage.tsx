@@ -77,7 +77,7 @@ const GenerateLinkPage = () => {
     }
 
     tags?.forEach((item, index) => {
-      url.searchParams.append(`tags[${index}}`, item.label)
+      url.searchParams.append(`tags[${index}]`, item.label)
     })
 
     navigator.clipboard.writeText(url.toString())
