@@ -36,8 +36,8 @@ type PopupContextType = {
   tags: MultiValue<DropdownOption> | null
   setTags: React.Dispatch<React.SetStateAction<MultiValue<DropdownOption> | null>>
 
-  channel: string | null
-  setChannel: React.Dispatch<React.SetStateAction<string | null>>
+  channel: SingleValue<DropdownOption>
+  setChannel: React.Dispatch<React.SetStateAction<SingleValue<DropdownOption>>>
 
   eventData: SportEvent[]
 }
@@ -53,8 +53,8 @@ type Flow = GenericFlow<ReactNode>
 const Popup = () => {
   const [title, setTitle] = React.useState<string>('')
   const [marketSelections, setMarketSelections] = React.useState<MarketSelection[]>([])
-  const [campaign, setCampaign] = React.useState<SingleValue<DropdownOption>>({} as SingleValue<DropdownOption>)
-  const [channel, setChannel] = React.useState<string | null>(null)
+  const [campaign, setCampaign] = React.useState<SingleValue<DropdownOption>>()
+  const [channel, setChannel] = React.useState<SingleValue<DropdownOption>>({ value: 1, label: 'espn-content' })
   const [tags, setTags] = React.useState<MultiValue<DropdownOption> | null>(null)
   const [location, setLocation] = React.useState<string>('')
   const [eventData, setEventData] = React.useState<SportEvent[]>([])

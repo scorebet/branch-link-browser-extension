@@ -74,10 +74,15 @@ const GenerateLinkPage = () => {
 
     if (campaign && campaign?.label) {
       url.searchParams.append('campaign', campaign.label)
+
+      if (campaign.label === 'betting-integrations') {
+        url.searchParams.append('clr', 'espnbettingintegration')
+        url.searchParams.append('$3p', 'a_espn')
+      }
     }
 
-    if (channel && channel !== '') {
-      url.searchParams.append('~channel', channel)
+    if (channel) {
+      url.searchParams.append('~channel', channel.label)
     }
 
     tags?.forEach((item, index) => {
