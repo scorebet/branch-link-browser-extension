@@ -26,8 +26,6 @@ const MarketingSettingsPage = () => {
 
   const { campaign, setCampaign, tags, setTags, channel, setChannel } = useContext(PopupContext)
 
-  console.log('channel: ', channel)
-
   return (
     <div className="w-full mt-6 flex flex-col gap-y-7">
       <div>
