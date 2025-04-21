@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { PopupContext } from '../Popup'
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 
 const MarketingSettingsPage = () => {
@@ -25,6 +26,7 @@ const MarketingSettingsPage = () => {
       <div>
         <p className="font-bold text-xs">Customer Campaign</p>
         <Select
+          placeholder="Select"
           closeMenuOnSelect
           components={animatedComponents}
           options={VALID_CAMPAIGNS}
@@ -34,7 +36,8 @@ const MarketingSettingsPage = () => {
       </div>
       <div className="font-bold text-xs">
         <p>Tags</p>
-        <Select
+        <CreatableSelect
+          placeholder="Type or select from dropdown"
           closeMenuOnSelect={false}
           components={animatedComponents}
           isMulti
