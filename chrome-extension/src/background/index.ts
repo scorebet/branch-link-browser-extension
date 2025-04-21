@@ -26,12 +26,15 @@ chrome.webRequest.onBeforeRequest.addListener(
         console.log('parsedBody: ', parsedBody)
 
         if (operationName === 'BetslipAddMarketSelection') {
+          const numerator = parsedBody.variables.input.odds.numerator ?? parsedBody.variables.input.odds.numeratorLong
+          const denominator =
+            parsedBody.variables.input.odds.denominator ?? parsedBody.variables.input.odds.denominatorLong
           sendMessage({
             operation: 'BetslipAddMarketSelection',
             data: {
               id: cleanMarketSelectionId(parsedBody.variables.input.selectionId),
-              numerator: parsedBody.variables.input.odds.numeratorLong,
-              denominator: parsedBody.variables.input.odds.denominatorLong,
+              numerator,
+              denominator,
             },
           })
         }
