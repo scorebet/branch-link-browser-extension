@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import React from 'react'
+import type { Dispatch, ReactNode, SetStateAction } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import './Popup.css'
 
 import GenerateLinkPage from './Pages/GenerateLinkPage'
@@ -25,16 +25,19 @@ type DropdownOption = {
 
 type PopupContextType = {
   title: string
-  setTitle: React.Dispatch<React.SetStateAction<string>>
+  setTitle: Dispatch<SetStateAction<string>>
   location: string
   marketSelections: MarketSelection[]
   // eventNames: string[]
 
   campaign: SingleValue<DropdownOption>
-  setCampaign: React.Dispatch<React.SetStateAction<SingleValue<DropdownOption>>>
+  setCampaign: Dispatch<React.SetStateAction<SingleValue<DropdownOption>>>
 
   tags: MultiValue<DropdownOption> | null
-  setTags: React.Dispatch<React.SetStateAction<MultiValue<DropdownOption> | null>>
+  setTags: Dispatch<SetStateAction<MultiValue<DropdownOption> | null>>
+
+  channel: SingleValue<DropdownOption>
+  setChannel: Dispatch<SetStateAction<SingleValue<DropdownOption>>>
 
   eventData: SportEvent[]
 }
@@ -48,12 +51,13 @@ type GenericFlow<T> = {
 type Flow = GenericFlow<ReactNode>
 
 const Popup = () => {
-  const [title, setTitle] = React.useState<string>('')
-  const [marketSelections, setMarketSelections] = React.useState<MarketSelection[]>([])
-  const [campaign, setCampaign] = React.useState<SingleValue<DropdownOption>>({} as SingleValue<DropdownOption>)
-  const [tags, setTags] = React.useState<MultiValue<DropdownOption> | null>(null)
-  const [location, setLocation] = React.useState<string>('')
-  const [eventData, setEventData] = React.useState<SportEvent[]>([])
+  const [title, setTitle] = useState<string>('')
+  const [marketSelections, setMarketSelections] = useState<MarketSelection[]>([])
+  const [campaign, setCampaign] = useState<SingleValue<DropdownOption>>()
+  const [channel, setChannel] = useState<SingleValue<DropdownOption>>({ value: 1, label: 'espn-content' })
+  const [tags, setTags] = useState<MultiValue<DropdownOption> | null>(null)
+  const [location, setLocation] = useState<string>('')
+  const [eventData, setEventData] = useState<SportEvent[]>([])
 
   const FLOW: Flow = {
     LINK_TITLE: <LinkTitlePage />,
@@ -61,9 +65,9 @@ const Popup = () => {
     GENERATE: <GenerateLinkPage />,
   }
 
-  const [flowIndex, setFlowIndex] = React.useState(0)
+  const [flowIndex, setFlowIndex] = useState(0)
 
-  const fetchSelections = React.useCallback(() => {
+  const fetchSelections = useCallback(() => {
     chrome.tabs.query(
       {
         active: true,
@@ -86,11 +90,11 @@ const Popup = () => {
     setEventData(eventData)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchSelections()
   }, [fetchSelections])
 
-  const CURRENT_FLOW_PAGE = React.useMemo(() => {
+  const CURRENT_FLOW_PAGE = useMemo(() => {
     const CURRENT_FLOW_KEY = Object.keys(FLOW)[flowIndex]
     return FLOW[CURRENT_FLOW_KEY]
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,6 +134,8 @@ const Popup = () => {
             location,
             title,
             setTitle,
+            channel,
+            setChannel,
           }}>
           <div className="max-h-screen">{isErrorState ? <ErrorPage /> : CURRENT_FLOW_PAGE}</div>
         </PopupContext.Provider>
