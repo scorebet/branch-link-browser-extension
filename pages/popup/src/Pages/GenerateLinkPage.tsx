@@ -9,7 +9,7 @@ type GenericEnvironmentMapping<T> = {
 type EnvironmentMapping = GenericEnvironmentMapping<string>
 
 const ENVIRONMENT_MAPPINGS: EnvironmentMapping = {
-  'https://espnbet.com': 'https://espnbet.app.link',
+  'https://espnbet.com': 'https://espnbet.app.link/integrations',
   'https://staging.endzonebet.com': 'https://espnbet.test-app.link/Kf3yzFBkVRb',
   'https://uat.endzonebet.com': 'https://espnbet.test-app.link/aayushUAT',
   'http://localhost:3000': 'https://espnbet.test-app.link/testLocal',
