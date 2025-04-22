@@ -6,7 +6,7 @@ const ProgressBar = ({ stepCount, currentStepIndex }) => {
     <div className="flex flex-row gap-3 ">
       {arr.map((_i, idx) => {
         if (idx === currentStepIndex) {
-          return <div key={idx} className="bg-blue-600 h-1 w-full"></div>
+          return <div key={idx} className="bg-brand-green h-1 w-full"></div>
         }
         return <div key={idx} className="bg-gray-400 h-1 w-full"></div>
       })}

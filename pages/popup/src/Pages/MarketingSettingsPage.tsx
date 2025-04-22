@@ -48,6 +48,7 @@ const MarketingSettingsPage = () => {
           components={animatedComponents}
           options={VALID_CAMPAIGNS}
           value={campaign}
+          className="border-brand-green"
           onChange={newValue => setCampaign(newValue)}
         />
       </div>
