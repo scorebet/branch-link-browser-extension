@@ -4,6 +4,8 @@ import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
+import FlowNavigationButtons from '@src/components/FlowNavigationButtons'
+import generateLink from '@src/utils/generateLink'
 
 const MarketingSettingsPage = () => {
   const VALID_CAMPAIGNS = [{ value: 1, label: 'betting-integrations' }]
@@ -24,7 +26,12 @@ const MarketingSettingsPage = () => {
 
   const animatedComponents = makeAnimated()
 
-  const { campaign, setCampaign, tags, setTags, channel, setChannel } = useContext(PopupContext)
+  const { marketSelections, setCampaign, campaign, setTags, tags, setChannel, channel, location, title, eventData } =
+    useContext(PopupContext)
+  const createLink = () => {
+    console.log('createLink()')
+    generateLink(location, title, marketSelections, campaign, channel, tags, eventData)
+  }
 
   return (
     <div className="w-full mt-6 flex flex-col gap-y-7">
@@ -64,6 +71,7 @@ const MarketingSettingsPage = () => {
           onChange={newValue => setTags(newValue)}
         />
       </div>
+      <FlowNavigationButtons nextTitle="Create Link" next={createLink} />
     </div>
   )
 }

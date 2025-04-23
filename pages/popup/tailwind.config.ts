@@ -9,6 +9,8 @@ export default {
       colors: {
         'brand-green': '#058569',
         'brand-background-black': '#1D1E1F',
+        'brand-subdued-primary': '#5A5C5D',
+        'brand-link-default': '#02644F',
       },
     },
   },

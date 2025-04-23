@@ -40,6 +40,10 @@ type PopupContextType = {
   setChannel: Dispatch<SetStateAction<SingleValue<DropdownOption>>>
 
   eventData: SportEvent[]
+
+  FLOW: Flow
+  flowIndex: number
+  setFlowIndex: Dispatch<SetStateAction<number>>
 }
 
 const PopupContext = React.createContext<PopupContextType>({} as PopupContextType)
@@ -127,12 +131,14 @@ const Popup = () => {
           </div>
         </header>
 
-        <div className="max-h-screen px-4 py-2">
+        <div className="h-full px-4 py-2">
           <ProgressBar stepCount={Object.keys(FLOW).length} currentStepIndex={flowIndex} />
           <PopupContext.Provider
             value={{
               marketSelections,
               eventData,
+              channel,
+              setChannel,
               campaign,
               setCampaign,
               tags,
@@ -140,18 +146,21 @@ const Popup = () => {
               location,
               title,
               setTitle,
+              FLOW,
+              flowIndex,
+              setFlowIndex,
             }}>
             {isErrorState ? <ErrorPage /> : CURRENT_FLOW_PAGE}
           </PopupContext.Provider>
         </div>
       </div>
 
-      <FlowNavigationButtons
+      {/* <FlowNavigationButtons
         onFirstPage={onFirstPage}
         onLastPage={onLastPage}
         back={() => setFlowIndex(flowIndex - 1)}
         next={() => setFlowIndex(flowIndex + 1)}
-      />
+      /> */}
     </div>
   )
 }

@@ -1,11 +1,28 @@
+import { PopupContext } from '@src/Popup'
+import { useContext } from 'react'
+
 type FlowNavigationButtonsProps = {
-  back: () => void
-  next: () => void
-  onFirstPage: boolean
-  onLastPage: boolean
+  back?: () => void
+  next?: () => void
+  nextTitle?: string
 }
 
-const FlowNavigationButtons = ({ back, next, onFirstPage, onLastPage }: FlowNavigationButtonsProps) => {
+const FlowNavigationButtons = ({ back: backOverride, next: nextOverride, nextTitle }: FlowNavigationButtonsProps) => {
+  const { flowIndex, setFlowIndex, FLOW } = useContext(PopupContext)
+
+  const onFirstPage = flowIndex === 0
+  const onLastPage = flowIndex === Object.keys(FLOW).length - 1
+
+  const next = () => {
+    nextOverride?.()
+    console.log('setFLowIndex to ', flowIndex + 1)
+    setFlowIndex(flowIndex + 1)
+  }
+  const back = () => {
+    backOverride?.()
+    setFlowIndex(flowIndex - 1)
+  }
+
   return (
     <div className="flex flex-row gap-x-2 absolute w-4/5 bottom-1 left-0 right-0 m-auto">
       <button
@@ -21,7 +38,7 @@ const FlowNavigationButtons = ({ back, next, onFirstPage, onLastPage }: FlowNavi
         type="submit"
         disabled={onLastPage}
         onClick={next}>
-        Next
+        {nextTitle ?? `Next`}
       </button>
     </div>
   )
