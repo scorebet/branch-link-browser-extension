@@ -5,6 +5,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import { useState } from 'react'
 import Popover from './components/Popover'
 import EditDeleteButtons from './components/EditDeleteButtons'
+import LinkRowView from './components/LinkRowView'
 
 const NewTab = () => {
   const [generatedLinks, setGeneratedLinks] = useLocalStorage('generatedLinks', []) as [
@@ -13,6 +14,7 @@ const NewTab = () => {
   ]
 
   const [showingCopyLinkToast, setShowingCopyLinkToast] = useState(false)
+  const [editingLink, setEditingLink] = useState<number | null>()
 
   function clearGeneratedLinks() {
     setGeneratedLinks([])
@@ -23,6 +25,8 @@ const NewTab = () => {
     newGeneratedLinks.splice(index, 1)
     setGeneratedLinks(newGeneratedLinks)
   }
+
+  const EditAtIndex = (index: number) => {}
 
   const parseLink = (link: string) => {
     const urlObj = new URL(link)
@@ -102,40 +106,46 @@ const NewTab = () => {
           <tbody>
             {generatedLinks.map((link, i) => {
               const parsedLink = parseLink(link.link)
-
               const campaign = parsedLink.searchParams.getAll('campaign')
               const tags = extractTagsFromUrl(link.link)
-              console.log('tags: ', tags)
               return (
-                <tr className="even:bg-white odd:bg-gray-100">
-                  <th className="px-6 py-4 font-medium text-black whitespace-nowrap">{link.title}</th>
-                  <td className="px-6 py-4">{link.eventNames}</td>
-                  <td className="px-6 py-4">{campaign}</td>
-                  <td className="px-6 py-4">
-                    {tags.map(tag => (
-                      <span className="bg-gray-200 mx-1 p-1">{tag}</span>
-                    ))}
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      className="text-brand-green-link font-semibold flex gap-1"
-                      onClick={() => openPreview(link.link)}>
-                      Preview
-                      <img src={chrome.runtime.getURL('new-tab/preview.svg')} alt="preview" />
-                    </button>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      className="text-brand-green-link font-semibold flex gap-1"
-                      onClick={() => copyToClipboard(link.link)}>
-                      Copy
-                      <img src={chrome.runtime.getURL('new-tab/copy.svg')} alt="copy" />
-                    </button>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Popover content={<EditDeleteButtons onDelete={() => deleteLinkAtIndex(i)} />}>Children</Popover>
-                  </td>
-                </tr>
+                <LinkRowView
+                  link={link}
+                  campaign={campaign}
+                  tags={tags}
+                  openPreview={openPreview}
+                  copyToClipboard={copyToClipboard}
+                  deleteLink={() => deleteLinkAtIndex(i)}
+                />
+                // <tr className="even:bg-white odd:bg-gray-100">
+                //   <th className="px-6 py-4 font-medium text-black whitespace-nowrap">{link.title}</th>
+                //   <td className="px-6 py-4">{link.eventNames}</td>
+                //   <td className="px-6 py-4">{campaign}</td>
+                //   <td className="px-6 py-4">
+                //     {tags.map(tag => (
+                //       <span className="bg-gray-200 mx-1 p-1">{tag}</span>
+                //     ))}
+                //   </td>
+                //   <td className="px-6 py-4">
+                //     <button
+                //       className="text-brand-green-link font-semibold flex gap-1"
+                //       onClick={() => openPreview(link.link)}>
+                //       Preview
+                //       <img src={chrome.runtime.getURL('new-tab/preview.svg')} alt="preview" />
+                //     </button>
+                //   </td>
+                //   <td className="px-6 py-4">
+                //     <button
+                //       className="text-brand-green-link font-semibold flex gap-1"
+                //       onClick={() => copyToClipboard(link.link)}>
+                //       Copy
+                //       <img src={chrome.runtime.getURL('new-tab/copy.svg')} alt="copy" />
+                //     </button>
+                //   </td>
+                //   <td className="px-6 py-4">
+                //     <Popover content={<EditDeleteButtons onDelete={() => deleteLinkAtIndex(i)} />}>Children</Popover>
+                //   </td>
+                // </tr>
               )
             })}
           </tbody>
