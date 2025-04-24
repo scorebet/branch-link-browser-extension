@@ -8,6 +8,7 @@ export default withUI({
     extend: {
       colors: {
         'brand-green-link': '#02644F',
+        'brand-background-green': '#ECF5EC',
       },
     },
   },

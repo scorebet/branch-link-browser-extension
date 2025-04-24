@@ -1,18 +1,27 @@
 import useLocalStorage from './useLocalStorage'
 import type { LocalStorageLink } from '../../utils/types'
 import Toast from './components/Toast'
+import type { Dispatch, SetStateAction } from 'react'
 import { useState } from 'react'
+import Popover from './components/Popover'
+import EditDeleteButtons from './components/EditDeleteButtons'
 
 const NewTab = () => {
   const [generatedLinks, setGeneratedLinks] = useLocalStorage('generatedLinks', []) as [
     LocalStorageLink[],
-    React.Dispatch<React.SetStateAction<never[]>>,
+    Dispatch<SetStateAction<LocalStorageLink[]>>,
   ]
 
   const [showingCopyLinkToast, setShowingCopyLinkToast] = useState(false)
 
   function clearGeneratedLinks() {
     setGeneratedLinks([])
+  }
+
+  const deleteLinkAtIndex = (index: number) => {
+    const newGeneratedLinks = [...generatedLinks]
+    newGeneratedLinks.splice(index, 1)
+    setGeneratedLinks(newGeneratedLinks)
   }
 
   const parseLink = (link: string) => {
@@ -87,10 +96,11 @@ const NewTab = () => {
               <th scope="col" className="px-6 py-3">
                 URL
               </th>
+              <th scope="col" className="px-6 py-3"></th>
             </tr>
           </thead>
           <tbody>
-            {generatedLinks.map(link => {
+            {generatedLinks.map((link, i) => {
               const parsedLink = parseLink(link.link)
 
               const campaign = parsedLink.searchParams.getAll('campaign')
@@ -121,6 +131,9 @@ const NewTab = () => {
                       Copy
                       <img src={chrome.runtime.getURL('new-tab/copy.svg')} alt="copy" />
                     </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Popover content={<EditDeleteButtons onDelete={() => deleteLinkAtIndex(i)} />}>Children</Popover>
                   </td>
                 </tr>
               )
