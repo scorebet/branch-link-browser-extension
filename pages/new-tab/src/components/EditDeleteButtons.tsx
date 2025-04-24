@@ -11,12 +11,13 @@ const ListItemButton = ({ iconUrl, title, onClick }: { iconUrl: string; title: s
 
 type EditDeleteButtonsProps = {
   onDelete: () => void
+  onEdit: () => void
 }
 
-export default function EditDeleteButtons({ onDelete }: EditDeleteButtonsProps) {
+export default function EditDeleteButtons({ onDelete, onEdit }: EditDeleteButtonsProps) {
   return (
     <div className="flex flex-col align-baseline m-0">
-      <ListItemButton title="Edit" iconUrl="new-tab/edit.svg" />
+      <ListItemButton onClick={onEdit} title="Edit" iconUrl="new-tab/edit.svg" />
       <ListItemButton onClick={onDelete} title="Delete" iconUrl="new-tab/delete.svg" />
     </div>
   )

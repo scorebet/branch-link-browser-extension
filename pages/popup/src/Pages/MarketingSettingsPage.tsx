@@ -1,13 +1,10 @@
 import { useContext } from 'react'
-import { PopupContext } from '../Popup'
-import Select from 'react-select'
-import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
+import { PopupContext } from '../Popup'
+import CamapignSelect from '../../../components/CampaignSelect'
 
 const MarketingSettingsPage = () => {
-  const VALID_CAMPAIGNS = [{ value: 1, label: 'betting-integrations' }]
-
   const VALID_TAGS = [
     { value: 1, label: 'Tag 1' },
     { value: 2, label: 'Tag 2' },
@@ -42,7 +39,8 @@ const MarketingSettingsPage = () => {
       </div>
       <div>
         <p className="font-bold text-xs">Customer Campaign</p>
-        <CreatableSelect
+        <CamapignSelect campaign={campaign} setCampaign={setCampaign} />
+        {/* <CreatableSelect
           placeholder="Type or select from dropdown"
           closeMenuOnSelect
           components={animatedComponents}
@@ -50,7 +48,7 @@ const MarketingSettingsPage = () => {
           value={campaign}
           className="border-brand-green"
           onChange={newValue => setCampaign(newValue)}
-        />
+        /> */}
       </div>
       <div className="font-bold text-xs">
         <p>Tags</p>

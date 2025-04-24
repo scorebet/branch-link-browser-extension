@@ -10,6 +10,7 @@ type LinkRowViewProps = {
   openPreview: (link: string) => void
   copyToClipboard: (link: string) => void
   deleteLink: () => void
+  editLink: () => void
 }
 
 export default function LinkRowView({
@@ -19,6 +20,7 @@ export default function LinkRowView({
   openPreview,
   copyToClipboard,
   deleteLink,
+  editLink,
 }: LinkRowViewProps) {
   return (
     <tr className="even:bg-white odd:bg-gray-100">
@@ -43,7 +45,9 @@ export default function LinkRowView({
         </button>
       </td>
       <td className="px-6 py-4">
-        <Popover content={<EditDeleteButtons onDelete={deleteLink} />}>Children</Popover>
+        <Popover content={<EditDeleteButtons onDelete={deleteLink} onEdit={editLink} />}>
+          <img src={chrome.runtime.getURL('new-tab/ellipsis.svg')} alt="ellipsis" />
+        </Popover>
       </td>
     </tr>
   )
