@@ -15,7 +15,7 @@ const ENVIRONMENT_MAPPINGS: EnvironmentMapping = {
 
 function extractBaseAndPath(url: string) {
   const urlObj = new URL(url)
-  const baseUrl = `${urlObj.protocol}//${urlObj.host}` // This gives us the base URL (protocol + host)
+  const baseUrl = urlObj.origin // This gives us the base URL (protocol + host)
   const relativePath = urlObj.pathname // This gives us the path after the host
 
   return {
@@ -24,7 +24,7 @@ function extractBaseAndPath(url: string) {
   }
 }
 
-export function getMostRecentLink() {
+function getMostRecentLink() {
   const links = getGeneratedLinks()
   return links[links.length - 1]
 }
@@ -47,7 +47,7 @@ function addGeneratedLink({ link, eventNames, title }: LocalStorageLink) {
   localStorage.setItem('generatedLinks', JSON.stringify([...links, newItem]))
 }
 
-export default function generateLink(location: string, title, marketSelections, campaign, channel, tags, eventData) {
+function generateLink(location: string, title, marketSelections, campaign, channel, tags, eventData) {
   console.log('generateLink()')
   const { baseUrl, relativePath } = extractBaseAndPath(location)
 
@@ -89,3 +89,5 @@ export default function generateLink(location: string, title, marketSelections, 
     eventNames: eventData.map(event => event.eventName),
   })
 }
+
+export { getMostRecentLink, generateLink }

@@ -104,9 +104,6 @@ const Popup = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flowIndex, marketSelections, eventData])
 
-  const onFirstPage = flowIndex === 0
-  const onLastPage = flowIndex === Object.keys(FLOW).length - 1
-
   const totalLegs = eventData.reduce((total: number, event: SportEvent) => total + event.legs.length, 0)
   const isErrorState = totalLegs !== marketSelections.length
 
@@ -154,13 +151,6 @@ const Popup = () => {
           </PopupContext.Provider>
         </div>
       </div>
-
-      {/* <FlowNavigationButtons
-        onFirstPage={onFirstPage}
-        onLastPage={onLastPage}
-        back={() => setFlowIndex(flowIndex - 1)}
-        next={() => setFlowIndex(flowIndex + 1)}
-      /> */}
     </div>
   )
 }

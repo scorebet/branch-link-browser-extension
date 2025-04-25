@@ -1,11 +1,9 @@
+import FlowNavigationButtons from '@src/components/FlowNavigationButtons'
+import { generateLink } from '@src/utils/generateLink'
 import { useContext } from 'react'
-import { PopupContext } from '../Popup'
-import Select from 'react-select'
-import CreatableSelect from 'react-select/creatable'
 import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
-import FlowNavigationButtons from '@src/components/FlowNavigationButtons'
-import generateLink from '@src/utils/generateLink'
+import { PopupContext } from '../Popup'
 
 const MarketingSettingsPage = () => {
   const VALID_CAMPAIGNS = [{ value: 1, label: 'betting-integrations' }]
