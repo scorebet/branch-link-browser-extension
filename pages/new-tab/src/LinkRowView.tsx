@@ -1,12 +1,9 @@
-import type { MultiValue, SingleValue } from 'react-select'
-import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
+import type { LocalStorageLink } from '../../../utils/types'
 import Popover from './components/Popover'
 import EditDeleteButtons from './EditDeleteButtons'
 
 type LinkRowViewProps = {
   link: LocalStorageLink
-  // campaign: SingleValue<DropdownOption>
-  // tags: MultiValue<DropdownOption> | null
 
   openPreview: (link: string) => void
   copyToClipboard: (link: string) => void
@@ -14,15 +11,7 @@ type LinkRowViewProps = {
   editLink: () => void
 }
 
-export default function LinkRowView({
-  link,
-  // campaign,
-  // tags,
-  openPreview,
-  copyToClipboard,
-  deleteLink,
-  editLink,
-}: LinkRowViewProps) {
+export default function LinkRowView({ link, openPreview, copyToClipboard, deleteLink, editLink }: LinkRowViewProps) {
   return (
     <tr className="even:bg-white odd:bg-gray-100">
       <th className="px-6 py-4 font-medium text-black whitespace-nowrap">{link.title}</th>

@@ -21,22 +21,6 @@ export const mockWindowProperty = (property: keyof (Window & typeof globalThis),
   })
 }
 
-// const mockLocalStorage = (() => {
-//   const store: Record<string, string> = {}
-
-//   return {
-//     getItem: (key: string) => store[key] || null,
-//     setItem: (key: string, value: string) => {
-//       store[key] = value
-//     },
-//     clear: () => {
-//       for (const key in store) {
-//         delete store[key]
-//       }
-//     },
-//   }
-// })()
-
 describe('Link Generation Module', () => {
   mockWindowProperty('location', {
     href: 'https://espnbet.com/some/path',
@@ -59,7 +43,7 @@ describe('Link Generation Module', () => {
   const eventData = [{ eventName: 'Super Bowl' }, { eventName: 'Pro Bowl' }]
 
   it('should generate a correct URL and store it in localStorage', () => {
-    generateLink(mockLocation, title, marketSelections, campaign, channel, tags, eventData)
+    generateLink({ mockLocation, title, marketSelections, campaign, channel, tags, eventData }, true)
 
     const stored = JSON.parse(localStorage.getItem('generatedLinks') || '[]')
     expect(stored.length).toBe(1)
