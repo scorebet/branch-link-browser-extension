@@ -2,15 +2,17 @@ import { generateLink, getMostRecentLink } from './generateLink'
 import type { LocalStorageLink } from '../../../utils/types'
 
 const mockLocalStorage = (() => {
-  let store: Record<string, string> = {}
+  const store: Record<string, string> = {}
 
   return {
-    getItem: jest.fn((key: string) => store[key] || null),
-    setItem: jest.fn((key: string, value: string) => {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
       store[key] = value
-    }),
+    },
     clear: () => {
-      store = {}
+      for (const key in store) {
+        delete store[key]
+      }
     },
   }
 })()
