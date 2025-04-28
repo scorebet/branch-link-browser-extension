@@ -1,5 +1,5 @@
 import { generateLink, getMostRecentLink } from './generateLink'
-import type { LocalStorageLink } from '../../../utils/types'
+import type { LocalStorageLink } from './types'
 
 export const mockWindowProperty = (property: keyof (Window & typeof globalThis), value: unknown) => {
   const originalProperty = window[property]

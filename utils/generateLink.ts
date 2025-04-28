@@ -1,4 +1,6 @@
+import { MultiValue } from 'react-select'
 import type { LocalStorageLink } from '../../../utils/types'
+import { DropdownOption, SportEvent } from './types'
 
 type GenericEnvironmentMapping<T> = {
   [key: string]: T
@@ -14,6 +16,7 @@ const ENVIRONMENT_MAPPINGS: EnvironmentMapping = {
 }
 
 function extractBaseAndPath(url: string) {
+  console.log('url: ', url)
   const urlObj = new URL(url)
   const baseUrl = urlObj.origin // This gives us the base URL (protocol + host)
   const relativePath = urlObj.pathname // This gives us the path after the host
@@ -37,17 +40,42 @@ function getGeneratedLinks() {
 
   return []
 }
-function addGeneratedLink({ link, eventNames, title }: LocalStorageLink) {
+function addGeneratedLink({ link, eventNames, title, tags, campaign, channel, location, eventData }: LocalStorageLink) {
   const links = getGeneratedLinks()
   const newItem = {
     link,
     eventNames,
     title,
+
+    tags,
+    campaign,
+    channel,
+    location,
+    eventData,
   }
   localStorage.setItem('generatedLinks', JSON.stringify([...links, newItem]))
 }
 
-function generateLink(location: string, title, marketSelections, campaign, channel, tags, eventData) {
+type GenerateLinkParams = {
+  location: string
+  title: string
+  marketSelections: Array<{
+    id: string
+    numerator: number
+    denominator: number
+  }>
+  campaign?: {
+    label: string
+  }
+  channel?: string
+  tags?: MultiValue<DropdownOption> | null
+  eventData: SportEvent
+}
+
+function generateLink(
+  { location, title, marketSelections, campaign, channel, tags, eventData }: GenerateLinkParams,
+  save = false,
+) {
   console.log('generateLink()')
   const { baseUrl, relativePath } = extractBaseAndPath(location)
 
@@ -83,11 +111,31 @@ function generateLink(location: string, title, marketSelections, campaign, chann
     url.searchParams.append(`tags[${index}]`, item.label)
   })
 
-  addGeneratedLink({
+  if (save) {
+    addGeneratedLink({
+      link: url.toString(),
+      eventNames: eventData.eventName,
+      title,
+      tags,
+      campaign,
+      channel,
+      location,
+      marketSelections,
+      eventData,
+    })
+  }
+
+  return {
     link: url.toString(),
+    eventNames: eventData.eventName,
     title,
-    eventNames: eventData.map(event => event.eventName),
-  })
+    tags,
+    campaign,
+    channel,
+    location,
+    marketSelections,
+    eventData,
+  }
 }
 
 export { getMostRecentLink, generateLink }

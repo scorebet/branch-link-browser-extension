@@ -1,4 +1,4 @@
-import { getMostRecentLink } from '@src/utils/generateLink'
+import { getMostRecentLink } from '../../../../utils/generateLink'
 
 const GenerateLinkPage = () => {
   const copyLink = () => {

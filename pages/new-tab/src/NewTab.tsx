@@ -1,37 +1,62 @@
-import useLocalStorage from './useLocalStorage'
-import type { LocalStorageLink } from '../../utils/types'
-import Toast from './components/Toast'
 import { useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
+import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
+import Toast from './components/Toast'
+import useLocalStorage from './useLocalStorage'
+import LinkRowEditView from './LinkRowEditView'
+import LinkRowView from './LinkRowView'
+import { generateLink } from '../../../utils/generateLink'
+import type { MultiValue } from 'react-select'
 
 const NewTab = () => {
   const [generatedLinks, setGeneratedLinks] = useLocalStorage('generatedLinks', []) as [
     LocalStorageLink[],
-    React.Dispatch<React.SetStateAction<never[]>>,
+    Dispatch<SetStateAction<LocalStorageLink[]>>,
   ]
 
   const [showingCopyLinkToast, setShowingCopyLinkToast] = useState(false)
+  const [editingLink, setEditingLink] = useState<number | null>(null)
 
   function clearGeneratedLinks() {
     setGeneratedLinks([])
   }
 
-  const parseLink = (link: string) => {
-    const urlObj = new URL(link)
-    return urlObj
+  const deleteLinkAtIndex = (index: number) => {
+    const newGeneratedLinks = [...generatedLinks]
+    newGeneratedLinks.splice(index, 1)
+    setGeneratedLinks(newGeneratedLinks)
   }
 
-  const extractTagsFromUrl = (link: string) => {
-    const urlObj = parseLink(link)
-    const params = new URLSearchParams(urlObj.search)
-    const tags = []
+  const editLinkAtIndex = (index: number) => {
+    setEditingLink(index)
+  }
 
-    for (const [key, value] of params.entries()) {
-      if (key.startsWith('tags')) {
-        tags.push(value)
+  const onEditSave = ({
+    title,
+    campaign,
+    tags,
+  }: {
+    title: string
+    campaign: DropdownOption
+    tags: MultiValue<DropdownOption>
+  }) => {
+    const newGeneratedLinks = [...generatedLinks]
+    console.log('old links', newGeneratedLinks)
+    console.log('tags', tags)
+    if (editingLink !== null) {
+      // Regenerate the link in local storage
+      const { location, marketSelections, channel, eventData } = newGeneratedLinks[editingLink]
+      const newLink = generateLink({ location, title, marketSelections, campaign, channel, tags, eventData })
+      console.log('old link', newGeneratedLinks[editingLink])
+      console.log('new link', newLink)
+
+      newGeneratedLinks[editingLink] = {
+        ...newLink,
       }
+      setGeneratedLinks(newGeneratedLinks)
+      console.log('new links', newGeneratedLinks)
+      setEditingLink(null)
     }
-
-    return tags
   }
 
   const copyToClipboard = (link: string) => {
@@ -87,42 +112,23 @@ const NewTab = () => {
               <th scope="col" className="px-6 py-3">
                 URL
               </th>
+              <th scope="col" className="px-6 py-3"></th>
             </tr>
           </thead>
           <tbody>
-            {generatedLinks.map(link => {
-              const parsedLink = parseLink(link.link)
+            {generatedLinks.map((link, i) => {
+              if (editingLink === i) {
+                return <LinkRowEditView link={link} onSave={onEditSave} />
+              }
 
-              const campaign = parsedLink.searchParams.getAll('campaign')
-              const tags = extractTagsFromUrl(link.link)
-              console.log('tags: ', tags)
               return (
-                <tr className="even:bg-white odd:bg-gray-100">
-                  <th className="px-6 py-4 font-medium text-black whitespace-nowrap">{link.title}</th>
-                  <td className="px-6 py-4">{link.eventNames}</td>
-                  <td className="px-6 py-4">{campaign}</td>
-                  <td className="px-6 py-4">
-                    {tags.map(tag => (
-                      <span className="bg-gray-200 mx-1 p-1">{tag}</span>
-                    ))}
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      className="text-brand-green-link font-semibold flex gap-1"
-                      onClick={() => openPreview(link.link)}>
-                      Preview
-                      <img src={chrome.runtime.getURL('new-tab/preview.svg')} alt="preview" />
-                    </button>
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      className="text-brand-green-link font-semibold flex gap-1"
-                      onClick={() => copyToClipboard(link.link)}>
-                      Copy
-                      <img src={chrome.runtime.getURL('new-tab/copy.svg')} alt="copy" />
-                    </button>
-                  </td>
-                </tr>
+                <LinkRowView
+                  link={link}
+                  openPreview={openPreview}
+                  copyToClipboard={copyToClipboard}
+                  deleteLink={() => deleteLinkAtIndex(i)}
+                  editLink={() => editLinkAtIndex(i)}
+                />
               )
             })}
           </tbody>

@@ -32,6 +32,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.operation === 'GetMarketSelections') {
     console.log('window.location.href: ', window.location.href)
     parseBetslip()
+
     return sendResponse({
       eventData,
       marketSelections,
