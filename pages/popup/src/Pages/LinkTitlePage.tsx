@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 
 import { PopupContext } from '../Popup'
+import FlowNavigationButtons from '@src/components/FlowNavigationButtons'
 
 const LinkTitlePage = () => {
   const { title, setTitle, eventData } = useContext(PopupContext)
@@ -45,6 +46,7 @@ const LinkTitlePage = () => {
           </div>
         )}
       </div>
+      <FlowNavigationButtons />
     </div>
   )
 }

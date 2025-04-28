@@ -8,7 +8,6 @@ import LinkTitlePage from './Pages/LinkTitlePage'
 import type { MultiValue, SingleValue } from 'react-select'
 import ErrorPage from './Pages/ErrorPage'
 import MarketingSettingsPage from './Pages/MarketingSettingsPage'
-import FlowNavigationButtons from './components/FlowNavigationButtons'
 import ProgressBar from './components/ProgressBar'
 import type { SportEvent } from '../../utils/types'
 
@@ -40,6 +39,9 @@ type PopupContextType = {
   setChannel: Dispatch<SetStateAction<SingleValue<DropdownOption>>>
 
   eventData: SportEvent[]
+
+  flowIndex: number
+  setFlowIndex: Dispatch<SetStateAction<number>>
 }
 
 const PopupContext = React.createContext<PopupContextType>({} as PopupContextType)
@@ -50,6 +52,12 @@ type GenericFlow<T> = {
 
 type Flow = GenericFlow<ReactNode>
 
+export const FLOW: Flow = {
+  LINK_TITLE: <LinkTitlePage />,
+  MARKETING: <MarketingSettingsPage />,
+  GENERATE: <GenerateLinkPage />,
+}
+
 const Popup = () => {
   const [title, setTitle] = useState<string>('')
   const [marketSelections, setMarketSelections] = useState<MarketSelection[]>([])
@@ -58,12 +66,6 @@ const Popup = () => {
   const [tags, setTags] = useState<MultiValue<DropdownOption> | null>(null)
   const [location, setLocation] = useState<string>('')
   const [eventData, setEventData] = useState<SportEvent[]>([])
-
-  const FLOW: Flow = {
-    LINK_TITLE: <LinkTitlePage />,
-    MARKETING: <MarketingSettingsPage />,
-    GENERATE: <GenerateLinkPage />,
-  }
 
   const [flowIndex, setFlowIndex] = useState(0)
 
@@ -100,9 +102,6 @@ const Popup = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flowIndex, marketSelections, eventData])
 
-  const onFirstPage = flowIndex === 0
-  const onLastPage = flowIndex === Object.keys(FLOW).length - 1
-
   const totalLegs = eventData.reduce((total: number, event: SportEvent) => total + event.legs.length, 0)
   const isErrorState = totalLegs !== marketSelections.length
 
@@ -127,12 +126,14 @@ const Popup = () => {
           </div>
         </header>
 
-        <div className="max-h-screen px-4 py-2">
+        <div className="h-full px-4 py-2">
           <ProgressBar stepCount={Object.keys(FLOW).length} currentStepIndex={flowIndex} />
           <PopupContext.Provider
             value={{
               marketSelections,
               eventData,
+              channel,
+              setChannel,
               campaign,
               setCampaign,
               tags,
@@ -140,18 +141,14 @@ const Popup = () => {
               location,
               title,
               setTitle,
+              FLOW,
+              flowIndex,
+              setFlowIndex,
             }}>
             {isErrorState ? <ErrorPage /> : CURRENT_FLOW_PAGE}
           </PopupContext.Provider>
         </div>
       </div>
-
-      <FlowNavigationButtons
-        onFirstPage={onFirstPage}
-        onLastPage={onLastPage}
-        back={() => setFlowIndex(flowIndex - 1)}
-        next={() => setFlowIndex(flowIndex + 1)}
-      />
     </div>
   )
 }
