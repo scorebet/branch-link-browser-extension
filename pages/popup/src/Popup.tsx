@@ -8,7 +8,6 @@ import LinkTitlePage from './Pages/LinkTitlePage'
 import type { MultiValue, SingleValue } from 'react-select'
 import ErrorPage from './Pages/ErrorPage'
 import MarketingSettingsPage from './Pages/MarketingSettingsPage'
-import FlowNavigationButtons from './components/FlowNavigationButtons'
 import ProgressBar from './components/ProgressBar'
 import type { SportEvent } from '../../utils/types'
 
@@ -41,7 +40,6 @@ type PopupContextType = {
 
   eventData: SportEvent[]
 
-  // FLOW: Flow
   flowIndex: number
   setFlowIndex: Dispatch<SetStateAction<number>>
 }

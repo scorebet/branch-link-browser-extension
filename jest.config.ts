@@ -6,6 +6,7 @@ const config: Config = {
   transform: {
     '^.+\\.ts': 'ts-jest',
   },
+  testEnvironment: 'jsdom',
 }
 
 export default config

@@ -1,27 +1,47 @@
 import { generateLink, getMostRecentLink } from './generateLink'
 import type { LocalStorageLink } from '../../../utils/types'
 
-const mockLocalStorage = (() => {
-  const store: Record<string, string> = {}
+export const mockWindowProperty = (property: keyof (Window & typeof globalThis), value: unknown) => {
+  const originalProperty = window[property]
 
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value
-    },
-    clear: () => {
-      for (const key in store) {
-        delete store[key]
-      }
-    },
-  }
-})()
+  beforeAll(() => {
+    delete window[property]
 
-Object.defineProperty(global, 'localStorage', {
-  value: mockLocalStorage,
-})
+    Object.defineProperty(window, property, {
+      configurable: true,
+      writable: true,
+      value,
+    })
+  })
+
+  afterAll(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    window[property] = originalProperty
+  })
+}
+
+// const mockLocalStorage = (() => {
+//   const store: Record<string, string> = {}
+
+//   return {
+//     getItem: (key: string) => store[key] || null,
+//     setItem: (key: string, value: string) => {
+//       store[key] = value
+//     },
+//     clear: () => {
+//       for (const key in store) {
+//         delete store[key]
+//       }
+//     },
+//   }
+// })()
 
 describe('Link Generation Module', () => {
+  mockWindowProperty('location', {
+    href: 'https://espnbet.com/some/path',
+  })
+
   beforeEach(() => {
     localStorage.clear()
     jest.clearAllMocks()
