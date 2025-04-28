@@ -1,5 +1,6 @@
 import { PopupContext } from '@src/Popup'
 import { useContext } from 'react'
+import { FLOW } from '../Popup'
 
 type FlowNavigationButtonsProps = {
   back?: () => void
@@ -8,7 +9,7 @@ type FlowNavigationButtonsProps = {
 }
 
 const FlowNavigationButtons = ({ back: backOverride, next: nextOverride, nextTitle }: FlowNavigationButtonsProps) => {
-  const { flowIndex, setFlowIndex, FLOW } = useContext(PopupContext)
+  const { flowIndex, setFlowIndex } = useContext(PopupContext)
 
   const onFirstPage = flowIndex === 0
   const onLastPage = flowIndex === Object.keys(FLOW).length - 1

@@ -41,7 +41,7 @@ type PopupContextType = {
 
   eventData: SportEvent[]
 
-  FLOW: Flow
+  // FLOW: Flow
   flowIndex: number
   setFlowIndex: Dispatch<SetStateAction<number>>
 }
@@ -54,6 +54,12 @@ type GenericFlow<T> = {
 
 type Flow = GenericFlow<ReactNode>
 
+export const FLOW: Flow = {
+  LINK_TITLE: <LinkTitlePage />,
+  MARKETING: <MarketingSettingsPage />,
+  GENERATE: <GenerateLinkPage />,
+}
+
 const Popup = () => {
   const [title, setTitle] = useState<string>('')
   const [marketSelections, setMarketSelections] = useState<MarketSelection[]>([])
@@ -62,12 +68,6 @@ const Popup = () => {
   const [tags, setTags] = useState<MultiValue<DropdownOption> | null>(null)
   const [location, setLocation] = useState<string>('')
   const [eventData, setEventData] = useState<SportEvent[]>([])
-
-  const FLOW: Flow = {
-    LINK_TITLE: <LinkTitlePage />,
-    MARKETING: <MarketingSettingsPage />,
-    GENERATE: <GenerateLinkPage />,
-  }
 
   const [flowIndex, setFlowIndex] = useState(0)
 
