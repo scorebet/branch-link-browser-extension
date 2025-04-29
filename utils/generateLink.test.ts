@@ -1,5 +1,5 @@
 import { generateLink, getMostRecentLink } from './generateLink'
-import type { LocalStorageLink } from './types'
+import type { LocalStorageLink, SportEvent } from './types'
 
 export const mockWindowProperty = (property: keyof (Window & typeof globalThis), value: unknown) => {
   const originalProperty = window[property]
@@ -37,20 +37,25 @@ describe('Link Generation Module', () => {
     { id: 'm1', numerator: 2, denominator: 1 },
     { id: 'm2', numerator: 3, denominator: 2 },
   ]
-  const campaign = { label: 'betting-integrations' }
-  const channel = { label: 'espn' }
-  const tags = [{ label: 'sports' }, { label: 'football' }]
-  const eventData = [{ eventName: 'Super Bowl' }, { eventName: 'Pro Bowl' }]
+  const campaign = { value: 1, label: 'betting-integrations' }
+  const channel = { value: 1, label: 'espn' }
+  const tags = [
+    { value: 1, label: 'sports' },
+    { value: 2, label: 'football' },
+  ]
+  const eventData = [
+    { eventName: 'Super Bowl', legs: [] },
+    { eventName: 'Pro Bowl', legs: [] },
+  ] as SportEvent[]
 
   it('should generate a correct URL and store it in localStorage', () => {
-    generateLink({ mockLocation, title, marketSelections, campaign, channel, tags, eventData }, true)
+    generateLink({ location: mockLocation, title, marketSelections, campaign, channel, tags, eventData }, true)
 
     const stored = JSON.parse(localStorage.getItem('generatedLinks') || '[]')
     expect(stored.length).toBe(1)
     const storedLink: LocalStorageLink = stored[0]
 
     expect(storedLink.title).toBe(title)
-    expect(storedLink.eventNames).toEqual(['Super Bowl', 'Pro Bowl'])
 
     const url = new URL(storedLink.link)
     expect(url.origin).toBe('https://espnbet.app.link')
@@ -66,8 +71,28 @@ describe('Link Generation Module', () => {
 
   it('should return the most recent link', () => {
     const mockLinks: LocalStorageLink[] = [
-      { link: 'https://test.com/1', title: 'Old', eventNames: ['Old Event'] },
-      { link: 'https://test.com/2', title: 'Recent', eventNames: ['New Event'] },
+      {
+        link: 'https://test.com/1',
+        title: 'Old',
+        eventNames: ['Old Event'],
+        tags: [],
+        channel: { value: 1, label: 'espn' },
+        campaign: { value: 1, label: 'betting-integrations' },
+        location: 'https://espnbet.com/some/path',
+        marketSelections: [],
+        eventData: [],
+      },
+      {
+        link: 'https://test.com/2',
+        title: 'Recent',
+        eventNames: ['New Event'],
+        tags: null,
+        channel: null,
+        campaign: null,
+        location: 'https://espnbet.com/some/path',
+        marketSelections: [],
+        eventData: [],
+      },
     ]
     localStorage.setItem('generatedLinks', JSON.stringify(mockLinks))
 

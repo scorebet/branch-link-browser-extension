@@ -1,6 +1,5 @@
-import { MultiValue } from 'react-select'
-import type { LocalStorageLink } from '../../../utils/types'
-import { DropdownOption, SportEvent } from './types'
+import type { MultiValue, SingleValue } from 'react-select'
+import type { DropdownOption, SportEvent } from './types'
 
 type GenericEnvironmentMapping<T> = {
   [key: string]: T
@@ -16,7 +15,6 @@ const ENVIRONMENT_MAPPINGS: EnvironmentMapping = {
 }
 
 function extractBaseAndPath(url: string) {
-  console.log('url: ', url)
   const urlObj = new URL(url)
   const baseUrl = urlObj.origin // This gives us the base URL (protocol + host)
   const relativePath = urlObj.pathname // This gives us the path after the host
@@ -67,9 +65,9 @@ type GenerateLinkParams = {
   campaign?: {
     label: string
   }
-  channel?: string
-  tags?: MultiValue<DropdownOption> | null
-  eventData: SportEvent
+  channel?: SingleValue<DropdownOption>
+  tags?: MultiValue<DropdownOption>
+  eventData: SportEvent[]
 }
 
 function generateLink(
@@ -111,23 +109,8 @@ function generateLink(
     url.searchParams.append(`tags[${index}]`, item.label)
   })
 
-  if (save) {
-    addGeneratedLink({
-      link: url.toString(),
-      eventNames: eventData.eventName,
-      title,
-      tags,
-      campaign,
-      channel,
-      location,
-      marketSelections,
-      eventData,
-    })
-  }
-
-  return {
+  const generatedLink = {
     link: url.toString(),
-    eventNames: eventData.eventName,
     title,
     tags,
     campaign,
@@ -136,6 +119,12 @@ function generateLink(
     marketSelections,
     eventData,
   }
+
+  if (save) {
+    addGeneratedLink(generatedLink)
+  }
+
+  return generatedLink
 }
 
-export { getMostRecentLink, generateLink }
+export { generateLink, getMostRecentLink }
