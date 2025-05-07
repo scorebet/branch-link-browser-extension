@@ -1,5 +1,5 @@
 import type { MultiValue, SingleValue } from 'react-select'
-import type { DropdownOption, SportEvent } from './types'
+import type { DropdownOption, LocalStorageLink, MarketSelection, SportEvent } from './types'
 
 type GenericEnvironmentMapping<T> = {
   [key: string]: T
@@ -38,11 +38,20 @@ function getGeneratedLinks() {
 
   return []
 }
-function addGeneratedLink({ link, eventNames, title, tags, campaign, channel, location, eventData }: LocalStorageLink) {
+export function addGeneratedLink({
+  link,
+  // eventNames,
+  title,
+  tags,
+  campaign,
+  channel,
+  location,
+  eventData,
+}: LocalStorageLink) {
   const links = getGeneratedLinks()
   const newItem = {
     link,
-    eventNames,
+    // eventNames,
     title,
 
     tags,
@@ -57,23 +66,14 @@ function addGeneratedLink({ link, eventNames, title, tags, campaign, channel, lo
 type GenerateLinkParams = {
   location: string
   title: string
-  marketSelections: Array<{
-    id: string
-    numerator: number
-    denominator: number
-  }>
-  campaign?: {
-    label: string
-  }
-  channel?: SingleValue<DropdownOption>
-  tags?: MultiValue<DropdownOption>
+  marketSelections: MarketSelection[]
+  campaign: SingleValue<DropdownOption> | null
+  channel: SingleValue<DropdownOption> | null
+  tags: MultiValue<DropdownOption> | null
   eventData: SportEvent[]
 }
 
-function generateLink(
-  { location, title, marketSelections, campaign, channel, tags, eventData }: GenerateLinkParams,
-  save = false,
-) {
+function generateLink({ location, title, marketSelections, campaign, channel, tags, eventData }: GenerateLinkParams) {
   console.log('generateLink()')
   const { baseUrl, relativePath } = extractBaseAndPath(location)
 
@@ -118,10 +118,6 @@ function generateLink(
     location,
     marketSelections,
     eventData,
-  }
-
-  if (save) {
-    addGeneratedLink(generatedLink)
   }
 
   return generatedLink

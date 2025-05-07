@@ -1,6 +1,9 @@
 import type { LocalStorageLink } from '../../../utils/types'
 import Popover from './components/Popover'
-import EditDeleteButtons from './EditDeleteButtons'
+import Menu from './components/Menu'
+import ActionButton from './components/ActionButton'
+import SvgDelete from './components/SvgDelete'
+import SvgEdit from './components/SvgEdit'
 
 type LinkRowViewProps = {
   link: LocalStorageLink
@@ -18,15 +21,13 @@ export default function LinkRowView({ link, openPreview, copyToClipboard, delete
       <td className="px-6 py-4">{link.eventData.map(i => i.eventName).join(' | ')}</td>
       <td className="px-6 py-4">{link.campaign?.label}</td>
       <td className="px-6 py-4">
-        {link.tags && link.tags.length > 0 ? (
-          link.tags.map(tag => (
-            <span key={tag.value} className="bg-gray-200 mx-1 p-1">
-              {tag.label}
-            </span>
-          ))
-        ) : (
-          <span></span>
-        )}
+        {link.tags && link.tags.length > 0
+          ? link.tags.map(tag => (
+              <span key={tag.value} className="bg-gray-200 mx-1 p-1">
+                {tag.label}
+              </span>
+            ))
+          : null}
       </td>
       <td className="px-6 py-4">
         <button className="text-brand-green-link font-semibold flex gap-1" onClick={() => openPreview(link.link)}>
@@ -41,8 +42,20 @@ export default function LinkRowView({ link, openPreview, copyToClipboard, delete
         </button>
       </td>
       <td className="px-6 py-4">
-        <Popover content={<EditDeleteButtons onDelete={deleteLink} onEdit={editLink} />}>
-          <img src={chrome.runtime.getURL('new-tab/ellipsis.svg')} alt="ellipsis" />
+        <Popover>
+          <Popover.target>
+            <img src={chrome.runtime.getURL('new-tab/ellipsis.svg')} alt="ellipsis" />
+          </Popover.target>
+          <Popover.content>
+            <div>
+              <ActionButton onClick={editLink} svg={<SvgDelete />}>
+                Edit
+              </ActionButton>
+              <ActionButton onClick={deleteLink} svg={<SvgEdit />}>
+                Delete
+              </ActionButton>
+            </div>
+          </Popover.content>
         </Popover>
       </td>
     </tr>

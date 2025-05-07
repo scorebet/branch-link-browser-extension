@@ -6,7 +6,7 @@ type DropdownOption = {
 }
 
 type LocalStorageLink = {
-  eventNames: string[]
+  // eventNames: string[]
   link: string
   title: string
 

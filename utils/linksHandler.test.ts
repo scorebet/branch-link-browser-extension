@@ -1,4 +1,4 @@
-import { generateLink, getMostRecentLink } from './generateLink'
+import { generateLink, getMostRecentLink } from './linksHandler'
 import type { LocalStorageLink, SportEvent } from './types'
 
 export const mockWindowProperty = (property: keyof (Window & typeof globalThis), value: unknown) => {
@@ -74,7 +74,7 @@ describe('Link Generation Module', () => {
       {
         link: 'https://test.com/1',
         title: 'Old',
-        eventNames: ['Old Event'],
+        // eventNames: ['Old Event'],
         tags: [],
         channel: { value: 1, label: 'espn' },
         campaign: { value: 1, label: 'betting-integrations' },
@@ -85,7 +85,7 @@ describe('Link Generation Module', () => {
       {
         link: 'https://test.com/2',
         title: 'Recent',
-        eventNames: ['New Event'],
+        // eventNames: ['New Event'],
         tags: null,
         channel: null,
         campaign: null,

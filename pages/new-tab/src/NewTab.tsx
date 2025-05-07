@@ -5,7 +5,7 @@ import Toast from './components/Toast'
 import useLocalStorage from './useLocalStorage'
 import LinkRowEditView from './LinkRowEditView'
 import LinkRowView from './LinkRowView'
-import { generateLink } from '../../../utils/generateLink'
+import { generateLink } from '../../../utils/linksHandler'
 import type { MultiValue } from 'react-select'
 
 const NewTab = () => {
