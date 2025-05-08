@@ -13,9 +13,11 @@ const EditableTextCell = ({ value, onChange }: EditableTextCellProps) => {
   return <input className="border-brand-green border-2 rounded-md p-1" value={value} onChange={onChange} />
 }
 
+type NewLink = Pick<LocalStorageLink, 'title' | 'campaign' | 'tags'>
+
 type LinkRowEditViewProps = {
   link: LocalStorageLink
-  onSave: (props: { title: string; campaign: DropdownOption; tags: MultiValue<DropdownOption> }) => void
+  onSave: (link: NewLink) => void
 }
 
 const VALID_CAMPAIGNS = [{ value: 1, label: 'betting-integrations' }]
