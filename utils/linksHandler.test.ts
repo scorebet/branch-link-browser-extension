@@ -74,7 +74,6 @@ describe('Link Generation Module', () => {
       {
         link: 'https://test.com/1',
         title: 'Old',
-        // eventNames: ['Old Event'],
         tags: [],
         channel: { value: 1, label: 'espn' },
         campaign: { value: 1, label: 'betting-integrations' },
@@ -85,7 +84,6 @@ describe('Link Generation Module', () => {
       {
         link: 'https://test.com/2',
         title: 'Recent',
-        // eventNames: ['New Event'],
         tags: null,
         channel: null,
         campaign: null,

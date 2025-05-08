@@ -48,10 +48,10 @@ export default function LinkRowView({ link, openPreview, copyToClipboard, delete
           </Popover.target>
           <Popover.content>
             <div>
-              <ActionButton onClick={editLink} svg={<SvgDelete />}>
+              <ActionButton onClick={editLink} variant="edit">
                 Edit
               </ActionButton>
-              <ActionButton onClick={deleteLink} svg={<SvgEdit />}>
+              <ActionButton onClick={deleteLink} variant="delete">
                 Delete
               </ActionButton>
             </div>
