@@ -6,7 +6,7 @@ type Variant = 'edit' | 'delete'
 type ActionButtonProps = {
   onClick: () => void
   children: React.ReactNode
-  variant?: Variant
+  variant: Variant
 }
 
 const ActionButtonIcon = ({ variant }: { variant: Variant }) => {
@@ -25,7 +25,7 @@ export default function ActionButton({ onClick, variant, children }: ActionButto
     <button
       onClick={onClick}
       className="flex items-center gap-x-2 stroke-slate-500 hover:stroke-brand-green-link hover:bg-brand-background-green w-full py-2">
-      <ActionButtonIcon variant={variant!} />
+      <ActionButtonIcon variant={variant} />
       {children}
     </button>
   )
