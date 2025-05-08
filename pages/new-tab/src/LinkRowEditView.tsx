@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
-import CreatableSelect from 'react-select/creatable'
+import type { SingleValue } from 'react-select'
 import makeAnimated from 'react-select/animated'
-import type { MultiValue, SingleValue } from 'react-select'
+import CreatableSelect from 'react-select/creatable'
+import { VALID_CAMPAIGNS, VALID_TAGS } from '../../../utils/consts'
+import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
 
 interface EditableTextCellProps {
   value: string
@@ -20,28 +21,16 @@ type LinkRowEditViewProps = {
   onSave: (link: NewLink) => void
 }
 
-const VALID_CAMPAIGNS = [{ value: 1, label: 'betting-integrations' }]
-const VALID_TAGS = [
-  { value: 1, label: 'Tag 1' },
-  { value: 2, label: 'Tag 2' },
-  { value: 3, label: 'Tag 3' },
-]
-
 export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) {
   const [title, setLinkTitle] = useState(link.title)
   const [campaignValue, setCampaignValue] = useState(link.campaign)
   const [tagsValue, setTagsValue] = useState(link.tags)
 
   const handleSave = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newLink: any = {
+    const newLink: NewLink = {
       title,
-    }
-    if (campaignValue) {
-      newLink.campaign = campaignValue
-    }
-    if (tagsValue) {
-      newLink.tags = tagsValue
+      campaign: campaignValue || '',
+      tags: tagsValue || [],
     }
     onSave(newLink)
   }
