@@ -1,9 +1,6 @@
 import type { LocalStorageLink } from '../../../utils/types'
-import Popover from './components/Popover'
-import Menu from './components/Menu'
 import ActionButton from './components/ActionButton'
-import SvgDelete from './components/SvgDelete'
-import SvgEdit from './components/SvgEdit'
+import Popover from './components/Popover'
 
 type LinkRowViewProps = {
   link: LocalStorageLink
@@ -19,6 +16,7 @@ export default function LinkRowView({ link, openPreview, copyToClipboard, delete
     <tr className="even:bg-white odd:bg-gray-100">
       <th className="px-6 py-4 font-medium text-black whitespace-nowrap">{link.title}</th>
       <td className="px-6 py-4">{link.eventData.map(i => i.eventName).join(' | ')}</td>
+      <td className="px-6 py-4">{link.customerCampaign?.label}</td>
       <td className="px-6 py-4">{link.campaign?.label}</td>
       <td className="px-6 py-4">
         {link.tags && link.tags.length > 0

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { SingleValue } from 'react-select'
 import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
-import { VALID_CAMPAIGNS, VALID_TAGS } from '../../../utils/consts'
+import { VALID_CAMPAIGNS, VALID_CUSTOMER_CAMPAIGNS, VALID_TAGS } from '../../../utils/consts'
 import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
 
 interface EditableTextCellProps {
@@ -14,7 +14,7 @@ const EditableTextCell = ({ value, onChange }: EditableTextCellProps) => {
   return <input className="border-brand-green border-2 rounded-md p-1" value={value} onChange={onChange} />
 }
 
-type NewLink = Pick<LocalStorageLink, 'title' | 'campaign' | 'tags'>
+type NewLink = Pick<LocalStorageLink, 'title' | 'campaign' | 'tags' | 'customerCampaign'>
 
 type LinkRowEditViewProps = {
   link: LocalStorageLink
@@ -23,14 +23,22 @@ type LinkRowEditViewProps = {
 
 export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) {
   const [title, setLinkTitle] = useState(link.title)
+  const [customerCampaignValue, setCustomerCampaignValue] = useState(link.customerCampaign)
   const [campaignValue, setCampaignValue] = useState(link.campaign)
   const [tagsValue, setTagsValue] = useState(link.tags)
 
   const handleSave = () => {
     const newLink: NewLink = {
       title,
-      campaign: campaignValue || '',
-      tags: tagsValue || [],
+    }
+    if (campaignValue) {
+      newLink.campaign = campaignValue
+    }
+    if (customerCampaignValue) {
+      newLink.customerCampaign = customerCampaignValue
+    }
+    if (tagsValue) {
+      newLink.tags = tagsValue
     }
     onSave(newLink)
   }
@@ -43,6 +51,17 @@ export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) 
         <EditableTextCell value={title} onChange={e => setLinkTitle(e.target.value)} />
       </th>
       <td className="px-6 py-4">{link.eventData.map(i => i.eventName).join(' | ')}</td>
+      <td className="px-6 py-4">
+        <CreatableSelect
+          placeholder="Type or select from dropdown"
+          closeMenuOnSelect
+          components={animatedComponents}
+          options={VALID_CUSTOMER_CAMPAIGNS}
+          value={customerCampaignValue}
+          className="border-brand-green"
+          onChange={newValue => setCustomerCampaignValue(newValue as SingleValue<DropdownOption>)}
+        />
+      </td>
       <td className="px-6 py-4">
         <CreatableSelect
           placeholder="Type or select from dropdown"

@@ -12,6 +12,7 @@ type LocalStorageLink = {
 
   tags: MultiValue<DropdownOption> | null
   channel: SingleValue<DropdownOption>
+  customerCampaign: SingleValue<DropdownOption>
   campaign: SingleValue<DropdownOption>
   location: string
   marketSelections: MarketSelection[]

@@ -40,10 +40,10 @@ function getGeneratedLinks() {
 }
 export function addGeneratedLink({
   link,
-  // eventNames,
   title,
   tags,
   campaign,
+  customerCampaign,
   channel,
   location,
   eventData,
@@ -51,11 +51,10 @@ export function addGeneratedLink({
   const links = getGeneratedLinks()
   const newItem = {
     link,
-    // eventNames,
     title,
-
     tags,
     campaign,
+    customerCampaign,
     channel,
     location,
     eventData,
@@ -67,13 +66,23 @@ type GenerateLinkParams = {
   location: string
   title: string
   marketSelections: MarketSelection[]
+  customerCampaign: SingleValue<DropdownOption> | null
   campaign: SingleValue<DropdownOption> | null
   channel: SingleValue<DropdownOption> | null
   tags: MultiValue<DropdownOption> | null
   eventData: SportEvent[]
 }
 
-function generateLink({ location, title, marketSelections, campaign, channel, tags, eventData }: GenerateLinkParams) {
+function generateLink({
+  location,
+  title,
+  marketSelections,
+  campaign,
+  customerCampaign,
+  channel,
+  tags,
+  eventData,
+}: GenerateLinkParams) {
   console.log('generateLink()')
   const { baseUrl, relativePath } = extractBaseAndPath(location)
 
@@ -101,6 +110,10 @@ function generateLink({ location, title, marketSelections, campaign, channel, ta
     }
   }
 
+  if (customerCampaign && customerCampaign?.label) {
+    url.searchParams.append('customer_campaign', customerCampaign.label)
+  }
+
   if (channel) {
     url.searchParams.append('~channel', channel.label)
   }
@@ -118,6 +131,7 @@ function generateLink({ location, title, marketSelections, campaign, channel, ta
     location,
     marketSelections,
     eventData,
+    customerCampaign,
   }
 
   return generatedLink

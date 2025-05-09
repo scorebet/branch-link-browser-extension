@@ -29,8 +29,11 @@ type PopupContextType = {
   marketSelections: MarketSelection[]
   // eventNames: string[]
 
-  campaign: SingleValue<DropdownOption>
-  setCampaign: Dispatch<React.SetStateAction<SingleValue<DropdownOption>>>
+  campaign: SingleValue<DropdownOption> | undefined
+  setCampaign: Dispatch<React.SetStateAction<SingleValue<DropdownOption> | MultiValue<DropdownOption> | null>>
+
+  customerCampaign: SingleValue<DropdownOption> | undefined
+  setCustomerCampaign: Dispatch<SetStateAction<SingleValue<DropdownOption>> | MultiValue<DropdownOption> | null>
 
   tags: MultiValue<DropdownOption> | null
   setTags: Dispatch<SetStateAction<MultiValue<DropdownOption> | null>>
@@ -62,6 +65,7 @@ const Popup = () => {
   const [title, setTitle] = useState<string>('')
   const [marketSelections, setMarketSelections] = useState<MarketSelection[]>([])
   const [campaign, setCampaign] = useState<SingleValue<DropdownOption>>()
+  const [customerCampaign, setCustomerCampaign] = useState<SingleValue<DropdownOption>>()
   const [channel, setChannel] = useState<SingleValue<DropdownOption>>({ value: 1, label: 'espn-content' })
   const [tags, setTags] = useState<MultiValue<DropdownOption> | null>(null)
   const [location, setLocation] = useState<string>('')
@@ -134,6 +138,8 @@ const Popup = () => {
               eventData,
               channel,
               setChannel,
+              customerCampaign,
+              setCustomerCampaign,
               campaign,
               setCampaign,
               tags,

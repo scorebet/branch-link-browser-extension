@@ -33,28 +33,34 @@ const NewTab = () => {
 
   const onEditSave = ({
     title,
+    customerCampaign,
     campaign,
     tags,
   }: {
     title: string
+    customerCampaign: DropdownOption
     campaign: DropdownOption
     tags: MultiValue<DropdownOption>
   }) => {
     const newGeneratedLinks = [...generatedLinks]
-    console.log('old links', newGeneratedLinks)
-    console.log('tags', tags)
     if (editingLink !== null) {
       // Regenerate the link in local storage
       const { location, marketSelections, channel, eventData } = newGeneratedLinks[editingLink]
-      const newLink = generateLink({ location, title, marketSelections, campaign, channel, tags, eventData })
-      console.log('old link', newGeneratedLinks[editingLink])
-      console.log('new link', newLink)
+      const newLink = generateLink({
+        location,
+        title,
+        marketSelections,
+        customerCampaign,
+        campaign,
+        channel,
+        tags,
+        eventData,
+      })
 
       newGeneratedLinks[editingLink] = {
         ...newLink,
       }
       setGeneratedLinks(newGeneratedLinks)
-      console.log('new links', newGeneratedLinks)
       setEditingLink(null)
     }
   }
@@ -99,6 +105,9 @@ const NewTab = () => {
               </th>
               <th scope="col" className="px-6 py-3">
                 Markets
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Customer Campaign
               </th>
               <th scope="col" className="px-6 py-3">
                 Campaign

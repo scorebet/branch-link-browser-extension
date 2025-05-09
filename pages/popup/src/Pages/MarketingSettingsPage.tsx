@@ -4,16 +4,37 @@ import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
 import { PopupContext } from '../Popup'
 import { generateLink, addGeneratedLink } from '../../../../utils/linksHandler'
-import { VALID_CAMPAIGNS, VALID_TAGS, VALID_CHANNELS } from '../../../../utils/consts'
+import { VALID_CAMPAIGNS, VALID_TAGS, VALID_CHANNELS, VALID_CUSTOMER_CAMPAIGNS } from '../../../../utils/consts'
 
 const MarketingSettingsPage = () => {
   const animatedComponents = makeAnimated()
 
-  const { marketSelections, setCampaign, campaign, setTags, tags, setChannel, channel, location, title, eventData } =
-    useContext(PopupContext)
+  const {
+    marketSelections,
+    setCampaign,
+    campaign,
+    customerCampaign,
+    setCustomerCampaign,
+    setTags,
+    tags,
+    setChannel,
+    channel,
+    location,
+    title,
+    eventData,
+  } = useContext(PopupContext)
   const createLink = () => {
     console.log('createLink()')
-    const newLink = generateLink({ location, title, marketSelections, campaign, channel, tags, eventData })
+    const newLink = generateLink({
+      location,
+      title,
+      marketSelections,
+      customerCampaign,
+      campaign,
+      channel,
+      tags,
+      eventData,
+    })
     addGeneratedLink(newLink)
   }
 
@@ -32,7 +53,7 @@ const MarketingSettingsPage = () => {
         />
       </div>
       <div>
-        <p className="font-bold text-xs">Customer Campaign</p>
+        <p className="font-bold text-xs">Campaign</p>
         <CreatableSelect
           placeholder="Type or select from dropdown"
           closeMenuOnSelect
@@ -41,6 +62,18 @@ const MarketingSettingsPage = () => {
           value={campaign}
           className="border-brand-green"
           onChange={newValue => setCampaign(newValue)}
+        />
+      </div>
+      <div>
+        <p className="font-bold text-xs">Customer Campaign</p>
+        <CreatableSelect
+          placeholder="Type or select from dropdown"
+          closeMenuOnSelect
+          components={animatedComponents}
+          options={VALID_CUSTOMER_CAMPAIGNS}
+          value={customerCampaign}
+          className="border-brand-green"
+          onChange={newValue => setCustomerCampaign(newValue)}
         />
       </div>
       <div className="font-bold text-xs">
