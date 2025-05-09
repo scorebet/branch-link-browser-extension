@@ -9,7 +9,7 @@ import type { MultiValue, SingleValue } from 'react-select'
 import ErrorPage from './Pages/ErrorPage'
 import MarketingSettingsPage from './Pages/MarketingSettingsPage'
 import ProgressBar from './components/ProgressBar'
-import type { SportEvent } from '../../utils/types'
+import type { SportEvent } from '../../../utils/types'
 
 type MarketSelection = {
   id: string

@@ -1,34 +1,20 @@
 import FlowNavigationButtons from '@src/components/FlowNavigationButtons'
-import { generateLink } from '@src/utils/generateLink'
 import { useContext } from 'react'
 import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
 import { PopupContext } from '../Popup'
+import { generateLink, addGeneratedLink } from '../../../../utils/linksHandler'
+import { VALID_CAMPAIGNS, VALID_TAGS, VALID_CHANNELS } from '../../../../utils/consts'
 
 const MarketingSettingsPage = () => {
-  const VALID_CAMPAIGNS = [{ value: 1, label: 'betting-integrations' }]
-
-  const VALID_TAGS = [
-    { value: 1, label: 'Tag 1' },
-    { value: 2, label: 'Tag 2' },
-    { value: 3, label: 'Tag 3' },
-  ]
-
-  const VALID_CHANNELS = [
-    { value: 1, label: 'espn-content' },
-    { value: 2, label: 'espn-app' },
-    { value: 3, label: 'espn-web' },
-    { value: 4, label: 'espn-fantasy-app' },
-    { value: 5, label: 'espn-fantasy-web' },
-  ]
-
   const animatedComponents = makeAnimated()
 
   const { marketSelections, setCampaign, campaign, setTags, tags, setChannel, channel, location, title, eventData } =
     useContext(PopupContext)
   const createLink = () => {
     console.log('createLink()')
-    generateLink(location, title, marketSelections, campaign, channel, tags, eventData)
+    const newLink = generateLink({ location, title, marketSelections, campaign, channel, tags, eventData })
+    addGeneratedLink(newLink)
   }
 
   return (

@@ -1,4 +1,5 @@
-import type { LocalStorageLink } from '../../../utils/types'
+import type { MultiValue, SingleValue } from 'react-select'
+import type { DropdownOption, LocalStorageLink, MarketSelection, SportEvent } from './types'
 
 type GenericEnvironmentMapping<T> = {
   [key: string]: T
@@ -37,17 +38,42 @@ function getGeneratedLinks() {
 
   return []
 }
-function addGeneratedLink({ link, eventNames, title }: LocalStorageLink) {
+export function addGeneratedLink({
+  link,
+  // eventNames,
+  title,
+  tags,
+  campaign,
+  channel,
+  location,
+  eventData,
+}: LocalStorageLink) {
   const links = getGeneratedLinks()
   const newItem = {
     link,
-    eventNames,
+    // eventNames,
     title,
+
+    tags,
+    campaign,
+    channel,
+    location,
+    eventData,
   }
   localStorage.setItem('generatedLinks', JSON.stringify([...links, newItem]))
 }
 
-function generateLink(location: string, title, marketSelections, campaign, channel, tags, eventData) {
+type GenerateLinkParams = {
+  location: string
+  title: string
+  marketSelections: MarketSelection[]
+  campaign: SingleValue<DropdownOption> | null
+  channel: SingleValue<DropdownOption> | null
+  tags: MultiValue<DropdownOption> | null
+  eventData: SportEvent[]
+}
+
+function generateLink({ location, title, marketSelections, campaign, channel, tags, eventData }: GenerateLinkParams) {
   console.log('generateLink()')
   const { baseUrl, relativePath } = extractBaseAndPath(location)
 
@@ -83,11 +109,18 @@ function generateLink(location: string, title, marketSelections, campaign, chann
     url.searchParams.append(`tags[${index}]`, item.label)
   })
 
-  addGeneratedLink({
+  const generatedLink = {
     link: url.toString(),
     title,
-    eventNames: eventData.map(event => event.eventName),
-  })
+    tags,
+    campaign,
+    channel,
+    location,
+    marketSelections,
+    eventData,
+  }
+
+  return generatedLink
 }
 
-export { getMostRecentLink, generateLink }
+export { generateLink, getMostRecentLink }
