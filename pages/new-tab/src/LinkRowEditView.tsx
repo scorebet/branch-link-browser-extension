@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { SingleValue } from 'react-select'
 import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
-import { VALID_CAMPAIGNS, VALID_CUSTOMER_CAMPAIGNS, VALID_TAGS } from '../../../utils/consts'
+import { VALID_CAMPAIGNS, VALID_CHANNELS, VALID_CUSTOMER_CAMPAIGNS, VALID_TAGS } from '../../../utils/consts'
 import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
 
 interface EditableTextCellProps {
@@ -14,7 +14,7 @@ const EditableTextCell = ({ value, onChange }: EditableTextCellProps) => {
   return <input className="border-brand-green border-2 rounded-md p-1" value={value} onChange={onChange} />
 }
 
-type NewLink = Pick<LocalStorageLink, 'title' | 'campaign' | 'tags' | 'customerCampaign'>
+type NewLink = Pick<LocalStorageLink, 'title' | 'campaign' | 'tags' | 'customerCampaign' | 'channel'>
 
 type LinkRowEditViewProps = {
   link: LocalStorageLink
@@ -25,6 +25,7 @@ export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) 
   const [title, setLinkTitle] = useState(link.title)
   const [customerCampaignValue, setCustomerCampaignValue] = useState(link.customerCampaign)
   const [campaignValue, setCampaignValue] = useState(link.campaign)
+  const [channelValue, setChannelValue] = useState(link.channel)
   const [tagsValue, setTagsValue] = useState(link.tags)
 
   const handleSave = () => {
@@ -36,6 +37,9 @@ export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) 
     }
     if (customerCampaignValue) {
       newLink.customerCampaign = customerCampaignValue
+    }
+    if (channelValue) {
+      newLink.channel = channelValue
     }
     if (tagsValue) {
       newLink.tags = tagsValue
@@ -71,6 +75,17 @@ export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) 
           value={campaignValue}
           className="border-brand-green"
           onChange={newValue => setCampaignValue(newValue as SingleValue<DropdownOption>)}
+        />
+      </td>
+      <td className="px-6 py-4">
+        <CreatableSelect
+          placeholder="Type or select from dropdown"
+          closeMenuOnSelect
+          components={animatedComponents}
+          isMulti={false}
+          value={channelValue}
+          options={VALID_CHANNELS}
+          onChange={newValue => setChannelValue(newValue)}
         />
       </td>
       <td className="px-6 py-4">

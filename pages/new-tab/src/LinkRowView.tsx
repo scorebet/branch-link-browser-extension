@@ -18,6 +18,7 @@ export default function LinkRowView({ link, openPreview, copyToClipboard, delete
       <td className="px-6 py-4">{link.eventData.map(i => i.eventName).join(' | ')}</td>
       <td className="px-6 py-4">{link.customerCampaign?.label}</td>
       <td className="px-6 py-4">{link.campaign?.label}</td>
+      <td className="px-6 py-4">{link.channel?.label}</td>
       <td className="px-6 py-4">
         {link.tags && link.tags.length > 0
           ? link.tags.map(tag => (

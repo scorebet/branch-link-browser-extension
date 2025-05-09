@@ -36,16 +36,18 @@ const NewTab = () => {
     customerCampaign,
     campaign,
     tags,
+    channel,
   }: {
     title: string
     customerCampaign: DropdownOption
     campaign: DropdownOption
     tags: MultiValue<DropdownOption>
+    channel: DropdownOption
   }) => {
     const newGeneratedLinks = [...generatedLinks]
     if (editingLink !== null) {
       // Regenerate the link in local storage
-      const { location, marketSelections, channel, eventData } = newGeneratedLinks[editingLink]
+      const { location, marketSelections, eventData } = newGeneratedLinks[editingLink]
       const newLink = generateLink({
         location,
         title,
@@ -111,6 +113,9 @@ const NewTab = () => {
               </th>
               <th scope="col" className="px-6 py-3">
                 Campaign
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Channel
               </th>
               <th scope="col" className="px-6 py-3">
                 Tags
