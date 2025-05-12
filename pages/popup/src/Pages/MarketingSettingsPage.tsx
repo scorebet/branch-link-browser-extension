@@ -60,6 +60,7 @@ const MarketingSettingsPage = () => {
           components={animatedComponents}
           options={VALID_CAMPAIGNS}
           value={campaign}
+          isMulti={false}
           className="border-brand-green"
           onChange={newValue => setCampaign(newValue)}
         />
@@ -73,6 +74,7 @@ const MarketingSettingsPage = () => {
           options={VALID_CUSTOMER_CAMPAIGNS}
           value={customerCampaign}
           className="border-brand-green"
+          isMulti={false}
           onChange={newValue => setCustomerCampaign(newValue)}
         />
       </div>

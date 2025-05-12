@@ -3,7 +3,7 @@ import type { SingleValue } from 'react-select'
 import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
 import { VALID_CAMPAIGNS, VALID_CHANNELS, VALID_CUSTOMER_CAMPAIGNS, VALID_TAGS } from '../../../utils/consts'
-import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
+import type { DropdownOption, LocalStorageLink, NewLink } from '../../../utils/types'
 
 interface EditableTextCellProps {
   value: string
@@ -13,8 +13,6 @@ interface EditableTextCellProps {
 const EditableTextCell = ({ value, onChange }: EditableTextCellProps) => {
   return <input className="border-brand-green border-2 rounded-md p-1" value={value} onChange={onChange} />
 }
-
-type NewLink = Pick<LocalStorageLink, 'title' | 'campaign' | 'tags' | 'customerCampaign' | 'channel'>
 
 type LinkRowEditViewProps = {
   link: LocalStorageLink
@@ -31,18 +29,10 @@ export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) 
   const handleSave = () => {
     const newLink: NewLink = {
       title,
-    }
-    if (campaignValue) {
-      newLink.campaign = campaignValue
-    }
-    if (customerCampaignValue) {
-      newLink.customerCampaign = customerCampaignValue
-    }
-    if (channelValue) {
-      newLink.channel = channelValue
-    }
-    if (tagsValue) {
-      newLink.tags = tagsValue
+      campaign: campaignValue || undefined,
+      customerCampaign: customerCampaignValue || undefined,
+      channel: channelValue || undefined,
+      tags: tagsValue || undefined,
     }
     onSave(newLink)
   }

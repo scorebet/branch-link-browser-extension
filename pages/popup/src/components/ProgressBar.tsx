@@ -1,6 +1,9 @@
-import React from 'react'
+interface ProgressBarProps {
+  stepCount: number
+  currentStepIndex: number
+}
 
-const ProgressBar = ({ stepCount, currentStepIndex }) => {
+const ProgressBar = ({ stepCount, currentStepIndex }: ProgressBarProps) => {
   const arr = new Array(stepCount).fill(0)
   return (
     <div className="flex flex-row gap-3 ">

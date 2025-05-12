@@ -1,4 +1,5 @@
-import type { LocalStorageLink } from '../../../utils/types'
+import type { SingleValue } from 'react-select'
+import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
 import ActionButton from './components/ActionButton'
 import Popover from './components/Popover'
 
@@ -16,8 +17,17 @@ export default function LinkRowView({ link, openPreview, copyToClipboard, delete
     <tr className="even:bg-white odd:bg-gray-100">
       <th className="px-6 py-4 font-medium text-black whitespace-nowrap">{link.title}</th>
       <td className="px-6 py-4">{link.eventData.map(i => i.eventName).join(' | ')}</td>
-      <td className="px-6 py-4">{link.customerCampaign?.label}</td>
-      <td className="px-6 py-4">{link.campaign?.label}</td>
+
+      <td className="px-6 py-4">
+        {Array.isArray(link.customerCampaign)
+          ? link.customerCampaign.map(i => i.label).join(' | ')
+          : (link.customerCampaign as SingleValue<DropdownOption>)?.label}
+      </td>
+      <td className="px-6 py-4">
+        {Array.isArray(link.campaign)
+          ? link.campaign.map(i => i.label).join(' | ')
+          : (link.campaign as SingleValue<DropdownOption>)?.label}
+      </td>
       <td className="px-6 py-4">{link.channel?.label}</td>
       <td className="px-6 py-4">
         {link.tags && link.tags.length > 0

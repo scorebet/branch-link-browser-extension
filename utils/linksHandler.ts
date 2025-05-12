@@ -1,5 +1,5 @@
 import type { MultiValue, SingleValue } from 'react-select'
-import type { DropdownOption, LocalStorageLink, MarketSelection, SportEvent } from './types'
+import type { DropdownOption, GenericCampaign, LocalStorageLink, MarketSelection, SportEvent } from './types'
 
 type GenericEnvironmentMapping<T> = {
   [key: string]: T
@@ -66,10 +66,10 @@ type GenerateLinkParams = {
   location: string
   title: string
   marketSelections: MarketSelection[]
-  customerCampaign: SingleValue<DropdownOption> | null
-  campaign: SingleValue<DropdownOption> | null
-  channel: SingleValue<DropdownOption> | null
-  tags: MultiValue<DropdownOption> | null
+  customerCampaign: GenericCampaign
+  campaign: GenericCampaign
+  channel: SingleValue<DropdownOption> | undefined
+  tags: MultiValue<DropdownOption> | undefined
   eventData: SportEvent[]
 }
 

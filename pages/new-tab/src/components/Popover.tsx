@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 
-const Popover = ({ children }) => {
+const Popover = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false)
-  const triggerRef = useRef(null)
-  const popoverRef = useRef(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleClickOutside = event => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         popoverRef.current &&
-        !popoverRef.current.contains(event.target) &&
-        !triggerRef.current.contains(event.target)
+        !popoverRef.current.contains(event.target as Node) &&
+        !triggerRef.current?.contains(event.target as Node)
       ) {
         setOpen(false)
       }

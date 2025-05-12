@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
-import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
+import { useState } from 'react'
+import { generateLink } from '../../../utils/linksHandler'
+import type { LocalStorageLink, NewLink } from '../../../utils/types'
 import Toast from './components/Toast'
-import useLocalStorage from './useLocalStorage'
 import LinkRowEditView from './LinkRowEditView'
 import LinkRowView from './LinkRowView'
-import { generateLink } from '../../../utils/linksHandler'
-import type { MultiValue } from 'react-select'
+import useLocalStorage from './useLocalStorage'
 
 const NewTab = () => {
   const [generatedLinks, setGeneratedLinks] = useLocalStorage('generatedLinks', []) as [
@@ -31,19 +30,7 @@ const NewTab = () => {
     setEditingLink(index)
   }
 
-  const onEditSave = ({
-    title,
-    customerCampaign,
-    campaign,
-    tags,
-    channel,
-  }: {
-    title: string
-    customerCampaign: DropdownOption
-    campaign: DropdownOption
-    tags: MultiValue<DropdownOption>
-    channel: DropdownOption
-  }) => {
+  const onEditSave = ({ title, customerCampaign, campaign, tags, channel }: NewLink) => {
     const newGeneratedLinks = [...generatedLinks]
     if (editingLink !== null) {
       // Regenerate the link in local storage
