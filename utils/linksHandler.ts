@@ -118,8 +118,8 @@ function generateLink({
     url.searchParams.append('~channel', channel.label)
   }
 
-  tags?.forEach((item, index) => {
-    url.searchParams.append(`tags[${index}]`, item.label)
+  tags?.forEach(item => {
+    url.searchParams.append(`tags`, item.label)
   })
 
   const generatedLink = {
