@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
-import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
+import { useState } from 'react'
+import { generateLink } from '../../../utils/linksHandler'
+import type { LocalStorageLink, NewLink } from '../../../utils/types'
 import Toast from './components/Toast'
-import useLocalStorage from './useLocalStorage'
 import LinkRowEditView from './LinkRowEditView'
 import LinkRowView from './LinkRowView'
-import { generateLink } from '../../../utils/linksHandler'
-import type { MultiValue } from 'react-select'
+import useLocalStorage from './useLocalStorage'
 
 const NewTab = () => {
   const [generatedLinks, setGeneratedLinks] = useLocalStorage('generatedLinks', []) as [
@@ -31,30 +30,26 @@ const NewTab = () => {
     setEditingLink(index)
   }
 
-  const onEditSave = ({
-    title,
-    campaign,
-    tags,
-  }: {
-    title: string
-    campaign: DropdownOption
-    tags: MultiValue<DropdownOption>
-  }) => {
+  const onEditSave = ({ title, customerCampaign, campaign, tags, channel }: NewLink) => {
     const newGeneratedLinks = [...generatedLinks]
-    console.log('old links', newGeneratedLinks)
-    console.log('tags', tags)
     if (editingLink !== null) {
       // Regenerate the link in local storage
-      const { location, marketSelections, channel, eventData } = newGeneratedLinks[editingLink]
-      const newLink = generateLink({ location, title, marketSelections, campaign, channel, tags, eventData })
-      console.log('old link', newGeneratedLinks[editingLink])
-      console.log('new link', newLink)
+      const { location, marketSelections, eventData } = newGeneratedLinks[editingLink]
+      const newLink = generateLink({
+        location,
+        title,
+        marketSelections,
+        customerCampaign,
+        campaign,
+        channel,
+        tags,
+        eventData,
+      })
 
       newGeneratedLinks[editingLink] = {
         ...newLink,
       }
       setGeneratedLinks(newGeneratedLinks)
-      console.log('new links', newGeneratedLinks)
       setEditingLink(null)
     }
   }
@@ -101,7 +96,13 @@ const NewTab = () => {
                 Markets
               </th>
               <th scope="col" className="px-6 py-3">
+                Customer Campaign
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Campaign
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Channel
               </th>
               <th scope="col" className="px-6 py-3">
                 Tags

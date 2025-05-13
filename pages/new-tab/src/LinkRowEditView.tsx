@@ -2,8 +2,8 @@ import { useState } from 'react'
 import type { SingleValue } from 'react-select'
 import makeAnimated from 'react-select/animated'
 import CreatableSelect from 'react-select/creatable'
-import { VALID_CAMPAIGNS, VALID_TAGS } from '../../../utils/consts'
-import type { DropdownOption, LocalStorageLink } from '../../../utils/types'
+import { VALID_CAMPAIGNS, VALID_CHANNELS, VALID_CUSTOMER_CAMPAIGNS, VALID_TAGS } from '../../../utils/consts'
+import type { DropdownOption, LocalStorageLink, NewLink } from '../../../utils/types'
 
 interface EditableTextCellProps {
   value: string
@@ -14,8 +14,6 @@ const EditableTextCell = ({ value, onChange }: EditableTextCellProps) => {
   return <input className="border-brand-green border-2 rounded-md p-1" value={value} onChange={onChange} />
 }
 
-type NewLink = Pick<LocalStorageLink, 'title' | 'campaign' | 'tags'>
-
 type LinkRowEditViewProps = {
   link: LocalStorageLink
   onSave: (link: NewLink) => void
@@ -23,14 +21,18 @@ type LinkRowEditViewProps = {
 
 export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) {
   const [title, setLinkTitle] = useState(link.title)
+  const [customerCampaignValue, setCustomerCampaignValue] = useState(link.customerCampaign)
   const [campaignValue, setCampaignValue] = useState(link.campaign)
+  const [channelValue, setChannelValue] = useState(link.channel)
   const [tagsValue, setTagsValue] = useState(link.tags)
 
   const handleSave = () => {
     const newLink: NewLink = {
       title,
-      campaign: campaignValue || '',
-      tags: tagsValue || [],
+      campaign: campaignValue || undefined,
+      customerCampaign: customerCampaignValue || undefined,
+      channel: channelValue || undefined,
+      tags: tagsValue || undefined,
     }
     onSave(newLink)
   }
@@ -48,10 +50,32 @@ export default function LinkRowEditView({ link, onSave }: LinkRowEditViewProps) 
           placeholder="Type or select from dropdown"
           closeMenuOnSelect
           components={animatedComponents}
+          options={VALID_CUSTOMER_CAMPAIGNS}
+          value={customerCampaignValue}
+          className="border-brand-green"
+          onChange={newValue => setCustomerCampaignValue(newValue as SingleValue<DropdownOption>)}
+        />
+      </td>
+      <td className="px-6 py-4">
+        <CreatableSelect
+          placeholder="Type or select from dropdown"
+          closeMenuOnSelect
+          components={animatedComponents}
           options={VALID_CAMPAIGNS}
           value={campaignValue}
           className="border-brand-green"
           onChange={newValue => setCampaignValue(newValue as SingleValue<DropdownOption>)}
+        />
+      </td>
+      <td className="px-6 py-4">
+        <CreatableSelect
+          placeholder="Type or select from dropdown"
+          closeMenuOnSelect
+          components={animatedComponents}
+          isMulti={false}
+          value={channelValue}
+          options={VALID_CHANNELS}
+          onChange={newValue => setChannelValue(newValue)}
         />
       </td>
       <td className="px-6 py-4">

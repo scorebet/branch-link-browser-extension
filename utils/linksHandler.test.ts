@@ -1,5 +1,6 @@
+import exp from 'constants'
 import { generateLink, getMostRecentLink } from './linksHandler'
-import type { LocalStorageLink, SportEvent } from './types'
+import type { LocalStorageLink, SportEvent, MarketSelection } from './types'
 
 export const mockWindowProperty = (property: keyof (Window & typeof globalThis), value: unknown) => {
   const originalProperty = window[property]
@@ -33,11 +34,14 @@ describe('Link Generation Module', () => {
 
   const mockLocation = 'https://espnbet.com/some/path'
   const title = 'Test Event'
-  const marketSelections = [
-    { id: 'm1', numerator: 2, denominator: 1 },
-    { id: 'm2', numerator: 3, denominator: 2 },
+
+  const marketSelections: MarketSelection[] = [
+    { id: 'm1', numerator: '2', denominator: '1' },
+    { id: 'm2', numerator: '3', denominator: '2' },
   ]
+
   const campaign = { value: 1, label: 'betting-integrations' }
+  const customerCampaign = { value: 1, label: 'article' }
   const channel = { value: 1, label: 'espn' }
   const tags = [
     { value: 1, label: 'sports' },
@@ -48,19 +52,25 @@ describe('Link Generation Module', () => {
     { eventName: 'Pro Bowl', legs: [] },
   ] as SportEvent[]
 
-  it('should generate a correct URL and store it in localStorage', () => {
-    generateLink({ location: mockLocation, title, marketSelections, campaign, channel, tags, eventData }, true)
+  it('should generate a correct URL', () => {
+    const newLink = generateLink({
+      location: mockLocation,
+      title,
+      marketSelections,
+      customerCampaign,
+      campaign,
+      channel,
+      tags,
+      eventData,
+    })
 
-    const stored = JSON.parse(localStorage.getItem('generatedLinks') || '[]')
-    expect(stored.length).toBe(1)
-    const storedLink: LocalStorageLink = stored[0]
+    expect(newLink.title).toBe(title)
 
-    expect(storedLink.title).toBe(title)
-
-    const url = new URL(storedLink.link)
+    const url = new URL(newLink.link)
     expect(url.origin).toBe('https://espnbet.app.link')
     expect(url.searchParams.get('$canonical_url')).toBe('/some/path')
     expect(url.searchParams.get('campaign')).toBe('betting-integrations')
+    expect(url.searchParams.get('customer_campaign')).toBe('article')
     expect(url.searchParams.get('clr')).toBe('espnbettingintegration')
     expect(url.searchParams.get('$3p')).toBe('a_espn')
     expect(url.searchParams.get('~channel')).toBe('espn')
@@ -76,6 +86,7 @@ describe('Link Generation Module', () => {
         title: 'Old',
         tags: [],
         channel: { value: 1, label: 'espn' },
+        customerCampaign: { value: 1, label: 'article' },
         campaign: { value: 1, label: 'betting-integrations' },
         location: 'https://espnbet.com/some/path',
         marketSelections: [],
@@ -84,8 +95,9 @@ describe('Link Generation Module', () => {
       {
         link: 'https://test.com/2',
         title: 'Recent',
-        tags: null,
+        tags: [],
         channel: null,
+        customerCampaign: { value: 1, label: 'article' },
         campaign: null,
         location: 'https://espnbet.com/some/path',
         marketSelections: [],

@@ -9,13 +9,7 @@ import type { MultiValue, SingleValue } from 'react-select'
 import ErrorPage from './Pages/ErrorPage'
 import MarketingSettingsPage from './Pages/MarketingSettingsPage'
 import ProgressBar from './components/ProgressBar'
-import type { SportEvent } from '../../../utils/types'
-
-type MarketSelection = {
-  id: string
-  numerator: number
-  denominator: number
-}
+import type { GenericCampaign, MarketSelection, SportEvent } from '../../../utils/types'
 
 type DropdownOption = {
   value: number
@@ -27,13 +21,15 @@ type PopupContextType = {
   setTitle: Dispatch<SetStateAction<string>>
   location: string
   marketSelections: MarketSelection[]
-  // eventNames: string[]
 
-  campaign: SingleValue<DropdownOption>
-  setCampaign: Dispatch<React.SetStateAction<SingleValue<DropdownOption>>>
+  campaign: GenericCampaign
+  setCampaign: Dispatch<SetStateAction<GenericCampaign>>
 
-  tags: MultiValue<DropdownOption> | null
-  setTags: Dispatch<SetStateAction<MultiValue<DropdownOption> | null>>
+  customerCampaign: GenericCampaign
+  setCustomerCampaign: Dispatch<SetStateAction<GenericCampaign>>
+
+  tags: MultiValue<DropdownOption> | undefined
+  setTags: Dispatch<SetStateAction<MultiValue<DropdownOption> | undefined>>
 
   channel: SingleValue<DropdownOption>
   setChannel: Dispatch<SetStateAction<SingleValue<DropdownOption>>>
@@ -61,9 +57,10 @@ export const FLOW: Flow = {
 const Popup = () => {
   const [title, setTitle] = useState<string>('')
   const [marketSelections, setMarketSelections] = useState<MarketSelection[]>([])
-  const [campaign, setCampaign] = useState<SingleValue<DropdownOption>>()
+  const [campaign, setCampaign] = useState<GenericCampaign>()
+  const [customerCampaign, setCustomerCampaign] = useState<GenericCampaign>()
   const [channel, setChannel] = useState<SingleValue<DropdownOption>>({ value: 1, label: 'espn-content' })
-  const [tags, setTags] = useState<MultiValue<DropdownOption> | null>(null)
+  const [tags, setTags] = useState<MultiValue<DropdownOption>>()
   const [location, setLocation] = useState<string>('')
   const [eventData, setEventData] = useState<SportEvent[]>([])
 
@@ -134,6 +131,8 @@ const Popup = () => {
               eventData,
               channel,
               setChannel,
+              customerCampaign,
+              setCustomerCampaign,
               campaign,
               setCampaign,
               tags,
@@ -141,7 +140,6 @@ const Popup = () => {
               location,
               title,
               setTitle,
-              FLOW,
               flowIndex,
               setFlowIndex,
             }}>

@@ -1,5 +1,10 @@
 const VALID_CAMPAIGNS = [{ value: 1, label: 'betting-integrations' }]
 
+const VALID_CUSTOMER_CAMPAIGNS = [
+  { value: 1, label: 'article' },
+  { value: 2, label: 'video' },
+]
+
 const VALID_TAGS = [
   { value: 1, label: 'Tag 1' },
   { value: 2, label: 'Tag 2' },
@@ -14,4 +19,4 @@ const VALID_CHANNELS = [
   { value: 5, label: 'espn-fantasy-web' },
 ]
 
-export { VALID_CAMPAIGNS, VALID_TAGS, VALID_CHANNELS }
+export { VALID_CAMPAIGNS, VALID_TAGS, VALID_CHANNELS, VALID_CUSTOMER_CAMPAIGNS }

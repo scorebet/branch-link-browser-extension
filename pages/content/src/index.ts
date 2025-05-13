@@ -1,7 +1,6 @@
+import type { MarketSelection, SportEvent } from '../../../utils/types'
 let marketSelections: MarketSelection[] = []
 let eventData: SportEvent[] = []
-
-import type { MarketSelection, SportEvent } from '../../utils/types'
 
 console.log('content script injected')
 

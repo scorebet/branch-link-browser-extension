@@ -5,18 +5,22 @@ type DropdownOption = {
   label: string
 }
 
+type GenericCampaign = SingleValue<DropdownOption> | undefined
+
 type LocalStorageLink = {
-  // eventNames: string[]
   link: string
   title: string
 
-  tags: MultiValue<DropdownOption> | null
-  channel: SingleValue<DropdownOption>
-  campaign: SingleValue<DropdownOption>
+  tags: MultiValue<DropdownOption> | undefined
+  channel: SingleValue<DropdownOption> | undefined
+  customerCampaign: GenericCampaign
+  campaign: GenericCampaign
   location: string
   marketSelections: MarketSelection[]
   eventData: SportEvent[]
 }
+
+type NewLink = Pick<LocalStorageLink, 'title' | 'campaign' | 'tags' | 'customerCampaign' | 'channel'>
 
 type SportEvent = {
   eventName: string
@@ -29,4 +33,4 @@ type MarketSelection = {
   denominator: string
 }
 
-export type { LocalStorageLink, SportEvent, MarketSelection, DropdownOption }
+export type { LocalStorageLink, GenericCampaign, SportEvent, MarketSelection, DropdownOption, NewLink }
