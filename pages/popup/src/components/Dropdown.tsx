@@ -38,7 +38,7 @@ const Dropdown = ({ options, selectedOptions, onSelect }: DropdownProps) => {
         <div className="absolute right-0 left-0 mx-auto mt-2 w-48 bg-white shadow-lg rounded-md border border-gray-200 z-10">
           <ul className="py-1">
             {options.map((option, index) => (
-              <li key={index} className="block px-4 py-2">
+              <li key={`${option}+${index}`} className="block px-4 py-2">
                 <div
                   role="button"
                   onClick={() => handleOptionToggle(option)}
