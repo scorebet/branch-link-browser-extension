@@ -76,7 +76,7 @@ describe('Link Generation Module', () => {
     expect(url.searchParams.get('~channel')).toBe('espn')
     expect(url.searchParams.get('market_selection_id[0]')).toBe('m1')
     expect(url.searchParams.get('odds_numerator[1]')).toBe('3')
-    expect(url.searchParams.get('tags[0]')).toBe('sports')
+    expect(url.searchParams.get('tags')).toBe('sports')
   })
 
   it('should return the most recent link', () => {
